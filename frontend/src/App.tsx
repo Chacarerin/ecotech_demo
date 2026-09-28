@@ -1,18 +1,23 @@
-import { Leaf } from 'lucide-react'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 
-import EstadoConexion from './components/EstadoConexion'
+import RutaProtegida from './auth/RutaProtegida'
+import Ingresar from './pages/Ingresar'
+import Panel from './pages/Panel'
+
+const rutas = createBrowserRouter([
+  { path: '/ingresar', element: <Ingresar /> },
+  {
+    path: '/',
+    element: (
+      <RutaProtegida>
+        <main className="mx-auto max-w-5xl px-4 py-6">
+          <Panel />
+        </main>
+      </RutaProtegida>
+    ),
+  },
+])
 
 export default function App() {
-  return (
-    <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-3 px-4">
-      <div className="flex items-center gap-3">
-        <span className="rounded-lg bg-acento p-2 text-white">
-          <Leaf size={24} strokeWidth={1.75} aria-hidden />
-        </span>
-        <h1 className="text-2xl font-bold">EcoTech Solutions</h1>
-      </div>
-      <p className="text-texto-secundario">Sistema de gestión interna</p>
-      <EstadoConexion />
-    </main>
-  )
+  return <RouterProvider router={rutas} />
 }
