@@ -1,5 +1,7 @@
 # EcoTech Solutions · Sistema de Gestión Interna
 
+[![CI](https://github.com/Chacarerin/ecotech_demo/actions/workflows/ci.yml/badge.svg)](https://github.com/Chacarerin/ecotech_demo/actions/workflows/ci.yml)
+
 Aplicación web de demostración para la gestión de empleados, departamentos, proyectos y horas
 trabajadas de **EcoTech Solutions**, el caso de la asignatura **Programación Orientada a Objeto
 Seguro (TI3021)** de INACAP Valparaíso.
@@ -64,13 +66,67 @@ programación orientada a objetos en un proyecto real.
 
 ## Ejecución local
 
-> Las instrucciones completas se incorporan en el hito 1, cuando exista el código.
-> Requisitos: Python 3.11, Node.js 20 y PostgreSQL 14.
+**Requisitos:** Python 3.11, Node.js 20.19 o superior y PostgreSQL 14.
+
+### 1. Clonar y activar las verificaciones
 
 ```bash
-cp .env.example .env          # completar con valores locales; nunca se versiona
-git config core.hooksPath .githooks   # activa las verificaciones de cada commit
+git clone https://github.com/Chacarerin/ecotech_demo.git
+cd ecotech_demo
+git config core.hooksPath .githooks     # revisa cada commit antes de aceptarlo
 ```
+
+### 2. Base de datos
+
+Cree un usuario y una base propios del proyecto. El permiso `CREATEDB` es necesario porque las
+pruebas crean y destruyen su propia base temporal.
+
+```bash
+psql -d postgres -c "CREATE USER ecotech_demo_user WITH PASSWORD 'una-clave-local' CREATEDB;"
+psql -d postgres -c "CREATE DATABASE ecotech_demo_db OWNER ecotech_demo_user;"
+```
+
+### 3. Backend
+
+```bash
+cd backend
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+```
+
+Cree `backend/.env` a partir de la sección **BACKEND** de [`.env.example`](.env.example), con la
+clave de base de datos del paso 2. Genere la `SECRET_KEY` con el comando que indica el propio
+archivo. **El `.env` nunca se sube al repositorio.**
+
+```bash
+python manage.py migrate
+python -m pytest                # las pruebas deben pasar antes de continuar
+python manage.py runserver      # API en http://localhost:8000
+```
+
+Compruebe en `http://localhost:8000/api/health/` que responde `{"estado": "ok", "base": "ok"}`.
+
+### 4. Interfaz
+
+En otra terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev                     # interfaz en http://localhost:5173
+```
+
+La página inicial muestra **«Servidor en línea · base de datos conectada»** cuando la interfaz,
+la API y la base se comunican entre sí.
+
+### Problemas frecuentes
+
+| Síntoma | Causa |
+|---|---|
+| `Falta la variable de entorno SECRET_KEY` | No existe `backend/.env`, o le falta esa línea |
+| `permission denied to create database` al correr las pruebas | El usuario de PostgreSQL no tiene `CREATEDB` |
+| La interfaz dice «No fue posible conectar con el servidor» | El backend no está corriendo en el puerto 8000 |
+| El commit es rechazado por el hook | Se preparó un archivo con un dato sensible; ver [`docs/seguridad_publicacion.md`](docs/seguridad_publicacion.md) |
 
 ---
 
