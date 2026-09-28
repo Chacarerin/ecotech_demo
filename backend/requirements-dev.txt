@@ -1,0 +1,4 @@
+# Solo para desarrollo y la CI: no se instala en el servidor.
+-r requirements.txt
+pytest==9.1.1
+pytest-django==4.14.0

@@ -1,0 +1,10 @@
+# Dependencias de producción · versiones fijadas para que el servidor instale
+# exactamente lo mismo que se probó en desarrollo.
+Django==5.2.17
+djangorestframework==3.18.1
+djangorestframework_simplejwt==5.5.1
+django-cors-headers==4.9.0
+psycopg[binary]==3.3.6
+python-dotenv==1.2.3
+cryptography==50.0.1
+gunicorn==26.2.0
