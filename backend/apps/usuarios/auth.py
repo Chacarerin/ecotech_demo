@@ -14,6 +14,8 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .serializers import UsuarioActualSerializer
+
 
 def _con_renovacion(respuesta: Response, renovacion: str) -> Response:
     """Adjunta el token de renovación como cookie, con la duración del propio token."""
@@ -81,3 +83,14 @@ class CerrarSesion(_SinAutenticacion):
         respuesta.delete_cookie(settings.COOKIE_RENOVACION["key"], path=settings.COOKIE_RENOVACION["path"],
                                 samesite=settings.COOKIE_RENOVACION["samesite"])
         return respuesta
+
+
+class UsuarioActual(APIView):
+    """GET /api/auth/yo/ · quién tiene la sesión y con qué rol.
+
+    La interfaz lo usa para decidir qué mostrar. Los permisos no dependen de esto:
+    cada endpoint los verifica por su cuenta.
+    """
+
+    def get(self, request):
+        return Response(UsuarioActualSerializer(request.user).data)

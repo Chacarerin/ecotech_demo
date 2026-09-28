@@ -68,3 +68,17 @@ def test_cerrar_sesion_invalida_la_renovacion_en_el_servidor(usuario):
     otro = APIClient()
     otro.cookies["ecotech_renovacion"] = copia               # alguien que había copiado la cookie
     assert otro.post("/api/auth/token/refresh/").status_code == 401
+
+
+def test_yo_exige_sesion(db):
+    assert APIClient().get("/api/auth/yo/").status_code == 401
+
+
+def test_yo_devuelve_el_usuario_y_su_rol_sin_datos_de_mas(usuario):
+    usuario.first_name, usuario.last_name, usuario.rol = "María", "Rojas", Usuario.Rol.GERENTE
+    usuario.save()
+    cliente = APIClient()
+    cliente.credentials(HTTP_AUTHORIZATION=f"Bearer {_entrar(cliente).json()['acceso']}")
+    r = cliente.get("/api/auth/yo/")
+    assert r.status_code == 200
+    assert r.json() == {"id": usuario.id, "username": "mrojas", "nombre": "María Rojas", "rol": "gerente"}
