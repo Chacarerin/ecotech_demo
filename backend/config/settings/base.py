@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Terceros
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     # Propias
     "apps.nucleo",
@@ -118,4 +119,27 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     # Todas las respuestas de error con la misma forma y sin detalles internos
     "EXCEPTION_HANDLER": "apps.nucleo.excepciones.manejar_excepcion",
+}
+
+# ── Sesión con JWT · docs/authentication.md §3 ──────────────────────────────
+from datetime import timedelta  # noqa: E402
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(os.environ.get("JWT_ACCESO_MINUTOS", "15"))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=int(os.environ.get("JWT_RENOVACION_HORAS", "8"))),
+    # Cada renovación entrega una renovación nueva e invalida la anterior: una
+    # renovación robada deja de servir en cuanto el usuario legítimo la usa.
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
+}
+
+# La renovación viaja en una cookie que JavaScript no puede leer, y solo hacia
+# /api/auth/: el resto de la API nunca la recibe.
+COOKIE_RENOVACION = {
+    "key": "ecotech_renovacion",
+    "httponly": True,
+    "secure": False,          # prod.py lo activa: en local no hay HTTPS
+    "samesite": "Lax",
+    "path": "/api/auth/",
 }
