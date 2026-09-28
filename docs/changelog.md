@@ -1,0 +1,61 @@
+# EcoTech Solutions — Changelog
+
+> Historial de cambios del proyecto. **Cada entrada lleva el hash corto del commit** que la
+> introdujo: con `git show <hash>` se ve exactamente qué cambió.
+>
+> Formato de versiones: [SemVer](https://semver.org/lang/es/). Categorías: Añadido, Cambiado,
+> Corregido, Eliminado, Seguridad.
+
+---
+
+## [Sin publicar]
+
+### Próximo
+- Hito 1 · esqueleto del backend y de la interfaz. Plan de commits en
+  [`project_status.md`](project_status.md) §4.
+
+---
+
+## [0.1.0] - 2026-09-28 · Hito 0 · Documentación inicial
+
+El primer bloque de trabajo no contiene código: define qué se construye, cómo y bajo qué reglas,
+antes de escribir la primera línea.
+
+### Añadido
+- `[81b24a4]` docs(readme): presentar el proyecto y su propósito académico
+- `[51d35b2]` docs(agente): documento base del proyecto para el agente de IA
+- `[9503aa8]` docs(spec): trazar los requisitos del caso a funcionalidades
+- `[5e412a6]` docs(arquitectura): capas, API y ubicación de cada concepto de POO
+- `[a1fa4d9]` docs(auth): roles, flujo de sesión y manejo de credenciales
+- `[2d2ee5f]` docs(permisos): límites del agente y reglas de publicación
+- `[9ed887a]` docs(deploy): explicar el método de publicación sin exponer el servidor
+- `[28f336a]` docs(entorno): lista de variables y plantilla sin valores
+- `[0c50841]` docs(seguridad): reglas de un repositorio público
+- `[3a61c6b]` docs(metodologia): explicar el método de trabajo a los estudiantes
+- `[1c80b6a]` docs(estado): hitos, decisiones tomadas y próximos pasos
+
+### Seguridad
+- `[a84b004]` chore(repo): excluir credenciales, servidor e insumos privados
+- `[e5a52cc]` security(repo): verificar datos sensibles antes de cada commit
+
+### Decisiones técnicas
+- Stack C · desacoplado: React + Vite + TypeScript, Django REST, PostgreSQL 14, VPS propio.
+- `CLAUDE.md` y `docs/` se versionan: son el material que el repositorio quiere mostrar.
+- Los datos operativos del servidor y las credenciales viven en una carpeta privada fuera de git.
+- Servicios externos sin clave de acceso (Open-Meteo y mindicador.cl).
+
+---
+
+## Plantilla para nuevas entradas
+
+```markdown
+## [X.Y.Z] - AAAA-MM-DD · Hito N · Nombre
+
+### Añadido
+- `[hash]` tipo(scope): descripción
+```
+
+```bash
+git log -1 --format="%h"     # hash corto del último commit
+git log --oneline -10        # los últimos diez
+```
