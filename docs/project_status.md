@@ -8,9 +8,9 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 2 · Autenticación y roles |
-| **Progreso general** | 20 % |
-| **Próximo hito** | Hito 2 · Autenticación y roles |
+| **Fase actual** | Hito 3 · Organización |
+| **Progreso general** | 30 % |
+| **Próximo hito** | Hito 3 · Departamentos y empleados con datos cifrados |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
 ---
@@ -21,8 +21,8 @@
 |---|------|------------|--------|------------|
 | 0 | **Documentación inicial**: visión, especificación, arquitectura, reglas del agente, seguridad de publicación | — | ✅ | 2026-09-28 |
 | 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | ✅ | 2026-09-28 |
-| 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | 🔜 | |
-| 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ⏳ | |
+| 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ✅ | 2026-09-28 |
+| 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | 🔜 | |
 | 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ⏳ | |
 | 5 | **Registro de horas**, con sus reglas | RF-08 | ⏳ | |
 | 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
@@ -49,20 +49,20 @@
 
 ---
 
-## 4. Próximos pasos · Hito 2 · Autenticación y roles
+## 4. Próximos pasos · Hito 3 · Organización
 
 | # | Tarea | Commit esperado |
 |---|-------|-----------------|
-| 1 | `rol` en `Usuario` como `TextChoices`: administrador, gerente, empleado | `feat(usuarios): rol del usuario` |
-| 2 | Inicio de sesión: token de acceso en la respuesta, renovación en cookie `HttpOnly` | `feat(auth): inicio de sesión con JWT` |
-| 3 | Renovación con rotación, y cierre de sesión que invalida la renovación | `feat(auth): renovar y cerrar sesión` |
-| 4 | `/api/auth/yo/`: usuario actual y su rol | `feat(auth): endpoint del usuario actual` |
-| 5 | Límite de cinco intentos por minuto en el inicio de sesión | `security(auth): limitar intentos de inicio de sesión` |
-| 6 | Permisos reutilizables por rol para los `viewsets` | `feat(nucleo): permisos por rol` |
-| 7 | Pruebas de sesión con los tres roles: permitido y denegado | `test(auth): sesión y permisos por rol` |
-| 8 | `SesionProvider`: token en memoria y renovación automática ante un 401 | `feat(frontend): sesión en memoria con renovación` |
-| 9 | Página de inicio de sesión con React Hook Form y Zod | `feat(frontend): página de inicio de sesión` |
-| 10 | Rutas protegidas y navegación con los iconos de `CLAUDE.md` §7 | `feat(frontend): rutas protegidas y navegación` |
+| 1 | Modelos base abstractos `ModeloAuditable` y `Persona` en `nucleo` | `feat(nucleo): modelos base abstractos` |
+| 2 | `CampoCifrado` con Fernet y la variable `FIELD_ENCRYPTION_KEY` obligatoria | `security(nucleo): campo cifrado para datos personales` |
+| 3 | Validadores: teléfono chileno y fecha no futura | `feat(nucleo): validadores de teléfono y fecha` |
+| 4 | Modelos `Departamento` y `Empleado`, con dirección, teléfono y salario cifrados | `feat(organizacion): departamentos y empleados` |
+| 5 | Reglas: correo y nombre únicos, gerente del propio departamento | `feat(organizacion): reglas de negocio del caso` |
+| 6 | API de departamentos: CRUD solo para administración | `feat(organizacion): API de departamentos` |
+| 7 | API de empleados con búsqueda; datos personales solo para administración | `feat(organizacion): API de empleados` |
+| 8 | Pruebas: cifrado en la base, permisos por rol y reglas | `test(organizacion): cifrado, permisos y reglas` |
+| 9 | Interfaz de departamentos: listado, alta y edición | `feat(frontend): módulo de departamentos` |
+| 10 | Interfaz de empleados: listado con búsqueda, alta y edición | `feat(frontend): módulo de empleados` |
 
 ---
 
@@ -104,6 +104,12 @@
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-28 · hito 2
+- Backend: rol en el usuario, inicio de sesión con JWT, renovación rotativa en cookie HttpOnly, cierre de sesión que invalida la renovación, `/api/auth/yo/`, límite de cinco intentos por minuto y permisos por rol. 25 pruebas.
+- Interfaz: sesión en memoria con renovación automática, inicio de sesión, rutas protegidas y navegación por rol.
+- Verificado en navegador real: redirección, errores, sesión recuperada al recargar, permisos por rol, 375 y 1280 px, y cierre de sesión.
+- Usuarios de prueba locales por rol en `privado/credentials.md`.
 
 ### 2026-09-28 · cierre del hito 1
 - CI en GitHub Actions con tres trabajos —backend contra PostgreSQL 14, interfaz en Node 20.20, verificación de publicación—; verde en su primera ejecución.

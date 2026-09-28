@@ -11,7 +11,35 @@
 ## [Sin publicar]
 
 ### Próximo
-- Hito 2 · autenticación y roles. Plan de commits en [`project_status.md`](project_status.md) §4.
+- Hito 3 · organización: departamentos y empleados con datos cifrados. Plan en
+  [`project_status.md`](project_status.md) §4.
+
+---
+
+## [0.3.0] - 2026-09-28 · Hito 2 · Autenticación y roles
+
+Sesión con JWT: el acceso vive en memoria y la renovación en una cookie que JavaScript no puede
+leer. Tres roles con permisos que decide la API. 25 pruebas del backend y el recorrido completo
+verificado en un navegador real.
+
+### Añadido
+- `[6a9905a]` feat(usuarios): rol del usuario con tres valores fijos
+- `[895834b]` feat(auth): inicio de sesión con JWT y renovación en cookie HttpOnly
+- `[51f41f2]` feat(auth): renovar y cerrar sesión desde la cookie
+- `[35a5370]` feat(auth): endpoint del usuario actual
+- `[9d52a99]` feat(nucleo): permisos por rol reutilizables, con su matriz de pruebas
+- `[9ca3327]` feat(frontend): sesión en memoria con renovación automática
+- `[f834137]` feat(frontend): página de inicio de sesión y ruta protegida
+- `[09c3843]` feat(frontend): navegación por rol y rutas de los módulos
+
+### Seguridad
+- `[c426192]` security(auth): cinco intentos de inicio de sesión por minuto
+
+### Decisiones y hallazgos
+- React Router 8 exige Node 22.22 y el servidor tiene 20.20: se fijó la versión 7 y `engine-strict`
+  hace que la CI detecte cualquier dependencia incompatible con el servidor.
+- El plan tenía un commit de pruebas por rol aparte; la matriz de permisos lo cubrió en `9d52a99`.
+- Una captura de pantalla detectó un color de texto bajo el contraste AA; quedó como regla en `CLAUDE.md`.
 
 ---
 
