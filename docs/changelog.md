@@ -16,6 +16,19 @@
 
 ---
 
+## [0.1.1] - 2026-09-28 · Publicación y decisiones de diseño
+
+El repositorio se publicó en GitHub con el mismo nombre de la carpeta. Se fijaron el dominio de la
+demostración y la base visual de la interfaz.
+
+### Cambiado
+- `[8b53135]` docs(estado): registrar la publicación del repositorio
+- `[1644c90]` docs(diseno): fijar Tailwind 4 y Lucide como base de la interfaz
+- `[062efc7]` docs(deploy): fijar el dominio en antostudio.cl
+- `[dec2b5b]` docs(agente): declarar que el scope del commit va sin tildes ni eñe
+
+---
+
 ## [0.1.0] - 2026-09-28 · Hito 0 · Documentación inicial
 
 El primer bloque de trabajo no contiene código: define qué se construye, cómo y bajo qué reglas,
