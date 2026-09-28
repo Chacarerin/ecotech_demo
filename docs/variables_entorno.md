@@ -16,8 +16,8 @@
 | `DJANGO_SETTINGS_MODULE` | Qué settings cargar | `config.settings.dev` | `config.settings.prod` | No |
 | `SECRET_KEY` | Firma de sesiones y tokens | cualquiera, larga | generada, única | **Sí** |
 | `DEBUG` | Modo de depuración | `true` | `false` | No |
-| `ALLOWED_HOSTS` | Dominios que atiende la API | `localhost,127.0.0.1` | subdominio de la API | No |
-| `CORS_ALLOWED_ORIGINS` | Orígenes que pueden llamar a la API | `http://localhost:5173` | dominio de la interfaz, con `https://` | No |
+| `ALLOWED_HOSTS` | Dominios que atiende la API | `localhost,127.0.0.1` | `ecotech-api.antostudio.cl` | No |
+| `CORS_ALLOWED_ORIGINS` | Orígenes que pueden llamar a la API | `http://localhost:5173` | `https://ecotech.antostudio.cl` | No |
 | `CSRF_TRUSTED_ORIGINS` | Orígenes confiables para POST | `http://localhost:5173` | ambos dominios, con `https://` | No |
 | `DB_NAME` | Base de datos | `ecotech_demo_db` | `ecotech_demo_db` | No |
 | `DB_USER` | Usuario de la base | `ecotech_demo_user` | `ecotech_demo_user` | No |
@@ -48,8 +48,8 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 
 | Variable | Propósito | Desarrollo | Producción | Secreta |
 |----------|-----------|------------|------------|---------|
-| `VITE_API_URL` | Dirección de la API | `http://localhost:8000` | subdominio de la API, con `https://` | No |
-| `VITE_SITE_URL` | Dirección de la interfaz | `http://localhost:5173` | dominio de la interfaz | No |
+| `VITE_API_URL` | Dirección de la API | `http://localhost:8000` | `https://ecotech-api.antostudio.cl` | No |
+| `VITE_SITE_URL` | Dirección de la interfaz | `http://localhost:5173` | `https://ecotech.antostudio.cl` | No |
 
 > [!WARNING]
 > **Toda variable `VITE_*` es pública.** Se compila dentro del JavaScript que descarga cualquier

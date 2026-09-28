@@ -24,7 +24,10 @@ Un solo camino para publicar, siempre el mismo. No hay pasos manuales en el día
 | Ambiente | Interfaz | API | Base de datos |
 |----------|----------|-----|---------------|
 | Local | `http://localhost:5173` | `http://localhost:8000` | PostgreSQL 14 local |
-| Producción | subdominio propio, HTTPS | subdominio propio de la API, HTTPS | PostgreSQL 14 del servidor, solo accesible desde el propio servidor |
+| Producción | `https://ecotech.antostudio.cl` | `https://ecotech-api.antostudio.cl` | PostgreSQL 14 del servidor, solo accesible desde el propio servidor |
+
+El dominio es público por naturaleza —cualquiera lo consulta en el DNS—, así que se declara.
+Lo que no se publica es cómo se administra el servidor que lo atiende.
 
 No hay ambiente de pruebas intermedio: se valida en local y se publica. Para un proyecto de una
 persona con un agente, un tercer ambiente cuesta más de lo que protege.

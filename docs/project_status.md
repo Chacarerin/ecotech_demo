@@ -89,6 +89,8 @@
 | Servicios externos sin clave de acceso | Se puede ejecutar sin registrarse en nada y no hay clave que filtrar |
 | Sin exportación a PDF | Excel basta para demostrar el polimorfismo; reduce dependencias |
 | Commits sin línea de coautoría de IA | Instrucción del docente; el trabajo con el agente se muestra en la documentación |
+| Dominio `ecotech.antostudio.cl` y API en `ecotech-api.antostudio.cl` | Decidido por el docente el 2026-09-28. Subdominio con guion para la API, convención del kit |
+| Tailwind 4 y Lucide para la interfaz | Decidido por el docente el 2026-09-28; reglas en `CLAUDE.md` §7 |
 | Repositorio público desde el hito 0, con el mismo nombre de la carpeta | Decidido por el docente el 2026-09-28: el proceso se muestra a medida que ocurre |
 
 ---
@@ -97,7 +99,6 @@
 
 | Decisión | Opciones | Nota |
 |----------|----------|------|
-| **Dominio de la demostración** | Supuesto: `ecotech.rubenschnettler.cl` y `ecotech-api.rubenschnettler.cl` | Convención del kit para subdominios, igual que el blog |
 | **Acceso a la demostración en línea** | Cuentas de demostración de solo lectura · sin acceso público | Evita que la base se llene de datos basura |
 
 ---
