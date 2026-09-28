@@ -34,3 +34,37 @@ def test_el_token_de_acceso_abre_la_api(usuario):
     cliente.credentials(HTTP_AUTHORIZATION=f"Bearer {acceso}")
     # /api/health/ es público; basta con que el token sea aceptado por la autenticación
     assert cliente.get("/api/health/").status_code == 200
+
+
+def _entrar(cliente):
+    return cliente.post("/api/auth/token/", {"username": "mrojas", "password": CLAVE}, format="json")
+
+
+def test_renovar_entrega_acceso_nuevo_y_rota_la_cookie(usuario):
+    cliente = APIClient()
+    primera = _entrar(cliente).cookies["ecotech_renovacion"].value
+    r = cliente.post("/api/auth/token/refresh/")
+    assert r.status_code == 200 and "acceso" in r.json()
+    assert r.cookies["ecotech_renovacion"].value != primera
+
+
+def test_una_renovacion_ya_usada_no_sirve_otra_vez(usuario):
+    cliente = APIClient()
+    robada = _entrar(cliente).cookies["ecotech_renovacion"].value
+    cliente.post("/api/auth/token/refresh/")                 # el usuario legítimo renueva
+    atacante = APIClient()
+    atacante.cookies["ecotech_renovacion"] = robada
+    assert atacante.post("/api/auth/token/refresh/").status_code == 401
+
+
+def test_renovar_sin_cookie_responde_401(db):
+    assert APIClient().post("/api/auth/token/refresh/").status_code == 401
+
+
+def test_cerrar_sesion_invalida_la_renovacion_en_el_servidor(usuario):
+    cliente = APIClient()
+    copia = _entrar(cliente).cookies["ecotech_renovacion"].value
+    assert cliente.post("/api/auth/logout/").status_code == 204
+    otro = APIClient()
+    otro.cookies["ecotech_renovacion"] = copia               # alguien que había copiado la cookie
+    assert otro.post("/api/auth/token/refresh/").status_code == 401

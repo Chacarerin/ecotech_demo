@@ -9,7 +9,10 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def _con_renovacion(respuesta: Response, renovacion: str) -> Response:
@@ -19,16 +22,23 @@ def _con_renovacion(respuesta: Response, renovacion: str) -> Response:
     return respuesta
 
 
-class IniciarSesion(APIView):
-    """POST /api/auth/token/ · usuario y clave → token de acceso + cookie de renovación."""
+class _SinAutenticacion(APIView):
+    """Base de los endpoints de sesión: no exigen un token de acceso.
+
+    Un token vencido en la cabecera no debe impedir volver a entrar ni renovar.
+    """
 
     permission_classes = [AllowAny]
-    authentication_classes = []   # un token vencido en la cabecera no debe impedir volver a entrar
+    authentication_classes = []
 
     def get_authenticate_header(self, request):
         # Sin clases de autenticación DRF no tiene cabecera que ofrecer y convierte el
-        # 401 en 403. Se declara explícita para que una clave incorrecta siga siendo 401.
+        # 401 en 403. Se declara explícita para que una sesión inválida siga siendo 401.
         return 'Bearer realm="api"'
+
+
+class IniciarSesion(_SinAutenticacion):
+    """POST /api/auth/token/ · usuario y clave → token de acceso + cookie de renovación."""
 
     def post(self, request):
         serializer = TokenObtainPairSerializer(data=request.data)
@@ -36,3 +46,38 @@ class IniciarSesion(APIView):
         tokens = serializer.validated_data
         return _con_renovacion(Response({"acceso": tokens["access"]}, status=status.HTTP_200_OK),
                                tokens["refresh"])
+
+
+class RenovarSesion(_SinAutenticacion):
+    """POST /api/auth/token/refresh/ · cookie de renovación → acceso nuevo + renovación rotada."""
+
+    def post(self, request):
+        renovacion = request.COOKIES.get(settings.COOKIE_RENOVACION["key"])
+        if not renovacion:
+            raise NotAuthenticated()
+        serializer = TokenRefreshSerializer(data={"refresh": renovacion})
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as exc:
+            raise AuthenticationFailed() from exc
+        datos = serializer.validated_data
+        return _con_renovacion(Response({"acceso": datos["access"]}), datos["refresh"])
+
+
+class CerrarSesion(_SinAutenticacion):
+    """POST /api/auth/logout/ · invalida la renovación en el servidor y borra la cookie.
+
+    Borrar solo la cookie no basta: quien la hubiera copiado podría seguir renovando.
+    """
+
+    def post(self, request):
+        renovacion = request.COOKIES.get(settings.COOKIE_RENOVACION["key"])
+        if renovacion:
+            try:
+                RefreshToken(renovacion).blacklist()
+            except TokenError:
+                pass    # ya vencida o ya invalidada: el resultado buscado es el mismo
+        respuesta = Response(status=status.HTTP_204_NO_CONTENT)
+        respuesta.delete_cookie(settings.COOKIE_RENOVACION["key"], path=settings.COOKIE_RENOVACION["path"],
+                                samesite=settings.COOKIE_RENOVACION["samesite"])
+        return respuesta
