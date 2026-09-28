@@ -354,6 +354,9 @@ estudiantes pueden ejecutarlo sin registrarse en nada.
 
 - Formato `tipo(scope): descripción`, en español, título de 72 caracteres como máximo. Lo valida
   el hook `commit-msg`.
+- **El scope va en minúsculas, sin tildes ni `ñ`**: `docs(diseno)`, no `docs(diseño)`. El hook lo
+  rechaza, porque el scope se usa para filtrar el historial y un carácter acentuado lo complica en
+  cualquier terminal. La descripción sí se escribe con ortografía completa.
 - **Un commit, un cambio.** Mejor cinco commits pequeños que uno que mezcla modelo, vista y estilos.
 - **Sin líneas de coautoría automática** (`Co-Authored-By` de herramientas de IA). El autor es el
   docente; el trabajo con el agente se documenta en este archivo y en `docs/`, que es donde un

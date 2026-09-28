@@ -34,7 +34,8 @@
           ],
           "idioma": "español",
           "coautoria": "Sin líneas Co-Authored-By de herramientas de IA. El hook commit-msg las rechaza.",
-          "despues_de_commit": "Registrar el hash corto en docs/changelog.md, en un commit docs(changelog) al cerrar cada bloque"
+          "despues_de_commit": "Registrar el hash corto en docs/changelog.md, en un commit docs(changelog) al cerrar cada bloque",
+          "scope": "Minúsculas, números, guion o guion bajo; sin tildes ni ñ. La descripción sí lleva ortografía completa."
         }
       },
       "push": {
