@@ -29,6 +29,8 @@ GENERICOS=(
   '/home/[a-z]+/'                             # rutas de un servidor
   'ssh-(ed25519|rsa) AAAA'                    # claves públicas de acceso
   '(PASSWORD|SECRET_KEY|ENCRYPTION_KEY)=[^<$ ][^ ]{11,}'   # valores reales en .env copiados a otro archivo
+  'django-insecure-'                          # la clave que genera startproject
+  "SECRET_KEY *= *[\"'][^\"']{20,}"            # una clave escrita como texto en settings.py
 )
 
 if [[ "${1:-}" == "--todo" ]]; then
