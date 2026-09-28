@@ -1,0 +1,113 @@
+# ─────────────────────────────────────────────────────────────────────────
+# CI · ecotech_demo
+#
+# En cada push y pull request: pruebas del backend contra PostgreSQL real,
+# lint y build estricto de la interfaz, y la verificación de publicación.
+#
+# No usa ningún secreto. Los valores de entorno de abajo son desechables:
+# solo existen dentro de la máquina temporal de GitHub y nombran su propósito.
+# El deploy tendrá su propio workflow en el hito 8.
+# ─────────────────────────────────────────────────────────────────────────
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend · pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # El mismo motor y versión que producción: nunca SQLite, ni siquiera en la CI
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: ecotech_demo_user
+          POSTGRES_PASSWORD: solo-ci-desechable
+          POSTGRES_DB: ecotech_demo_db
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.dev
+      SECRET_KEY: solo-ci-desechable-no-es-una-clave-real
+      DB_NAME: ecotech_demo_db
+      DB_USER: ecotech_demo_user
+      DB_PASSWORD: solo-ci-desechable
+      DB_HOST: localhost
+      DB_PORT: "5432"
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Verificar la configuración
+        run: python manage.py check
+
+      - name: Migraciones sin cambios pendientes
+        # Falla si un modelo cambió y nadie generó su migración
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Pruebas
+        run: python -m pytest
+
+  frontend:
+    name: Interfaz · lint y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # La versión del servidor: si compila aquí, compila en producción
+          node-version: "20.20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build con TypeScript estricto
+        run: npm run build
+
+  publicacion:
+    name: Verificación de publicación
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar datos sensibles en todo el repositorio
+        # Segunda barrera: la primera es el hook pre-commit, que puede saltarse.
+        # Aquí corren los patrones genéricos; los del servidor viven fuera del repositorio.
+        run: bash scripts/verificar_publicacion.sh --todo
