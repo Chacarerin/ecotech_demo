@@ -119,7 +119,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     # Todas las respuestas de error con la misma forma y sin detalles internos
     "EXCEPTION_HANDLER": "apps.nucleo.excepciones.manejar_excepcion",
+    # Límite de intentos: lo aplican las vistas que declaran throttle_scope
+    "DEFAULT_THROTTLE_RATES": {"inicio_sesion": "5/min"},
 }
+
+# El contador de intentos vive en la memoria de cada proceso. Con tres procesos de
+# gunicorn, el límite real llega a 15 por minuto: sigue frenando un ataque de fuerza
+# bruta, sin instalar Redis en un servidor que no lo tiene (CLAUDE.md §10).
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 
 # ── Sesión con JWT · docs/authentication.md §3 ──────────────────────────────
 from datetime import timedelta  # noqa: E402

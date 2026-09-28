@@ -82,3 +82,12 @@ def test_yo_devuelve_el_usuario_y_su_rol_sin_datos_de_mas(usuario):
     r = cliente.get("/api/auth/yo/")
     assert r.status_code == 200
     assert r.json() == {"id": usuario.id, "username": "mrojas", "nombre": "María Rojas", "rol": "gerente"}
+
+
+def test_el_sexto_intento_en_un_minuto_se_rechaza(usuario):
+    cliente = APIClient()
+    for _ in range(5):
+        cliente.post("/api/auth/token/", {"username": "mrojas", "password": "equivocada"}, format="json")
+    r = cliente.post("/api/auth/token/", {"username": "mrojas", "password": CLAVE}, format="json")
+    assert r.status_code == 429                              # ni con la clave correcta
+    assert r.json()["error"] == "demasiados_intentos"

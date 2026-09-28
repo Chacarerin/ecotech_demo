@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 from rest_framework_simplejwt.exceptions import TokenError
@@ -41,6 +42,10 @@ class _SinAutenticacion(APIView):
 
 class IniciarSesion(_SinAutenticacion):
     """POST /api/auth/token/ · usuario y clave → token de acceso + cookie de renovación."""
+
+    # Cinco intentos por minuto y por dirección de origen: frena la prueba masiva de claves
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "inicio_sesion"
 
     def post(self, request):
         serializer = TokenObtainPairSerializer(data=request.data)
