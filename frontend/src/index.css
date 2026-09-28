@@ -1,1 +1,34 @@
-/* Los estilos se definen con Tailwind en el commit siguiente. */
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+/*
+ * Tokens de diseño · CLAUDE.md §7.
+ * Tailwind 4 genera una clase por token: bg-fondo, text-acento, border-borde…
+ * Un color que no esté aquí no se usa en la interfaz.
+ */
+@theme {
+  --color-fondo: #F7F9F8;
+  --color-tarjeta: #FFFFFF;
+  --color-acento: #0F766E;          /* verde azulado: acción principal */
+  --color-acento-hover: #115E59;
+  --color-positivo: #65A30D;        /* verde lima: estados positivos */
+  --color-peligro: #B91C1C;
+  --color-texto: #1F2937;
+  --color-texto-secundario: #4B5563;
+  --color-texto-tenue: #6B7280;
+  --color-borde: #E5E7EB;
+
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-fondo font-sans text-texto antialiased;
+  }
+  /* 16 px en campos: evita el zoom automático de iOS al enfocar */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
