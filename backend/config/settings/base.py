@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     # Terceros
     "rest_framework",
     "corsheaders",
+    # Propias
+    "apps.usuarios",
 ]
 
 MIDDLEWARE = [
@@ -98,6 +100,9 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Usuario propio desde el primer día: cambiarlo después obliga a rehacer la base
+AUTH_USER_MODEL = "usuarios.Usuario"
 
 # CORS y CSRF: la interfaz vive en otro dominio. Lista exacta, nunca «*».
 CORS_ALLOWED_ORIGINS = lista("CORS_ALLOWED_ORIGINS")
