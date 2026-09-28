@@ -54,7 +54,8 @@ bajo gunicorn, en el mismo repositorio y el mismo VPS.
 | Capa | Tecnología | Versión |
 |------|------------|---------|
 | Interfaz | React + Vite + TypeScript | React 19 · Vite 7 · TS 5 |
-| Estilos | Tailwind CSS | 4 |
+| Estilos | Tailwind CSS, con los tokens de §7 en `@theme` | 4 |
+| Iconos | Lucide (`lucide-react`) | — |
 | Datos en la interfaz | TanStack Query | 5 |
 | Formularios | React Hook Form + Zod | — |
 | API | Django + Django REST Framework | Django 5.2 LTS · DRF 3.16 |
@@ -211,23 +212,61 @@ Estética limpia de producto de gestión, asociada a sostenibilidad sin caer en 
 | **Estados siempre visibles** | Carga, vacío y error en cada vista que consulta la API |
 | **Acción primaria al alcance del pulgar** | En móvil, «Registrar horas» fija en la parte inferior |
 | **Accesibilidad** | Contraste AA, foco visible, etiquetas en todos los campos |
+| **Solo Tailwind** | Estilos con clases utilitarias de Tailwind. Nada de CSS suelto por componente ni estilos en línea; lo repetido se extrae a un componente, no a una clase CSS |
+| **Iconos de Lucide, con significado** | Un icono ayuda a distinguir, no decora. Siempre acompañado de texto, salvo en botones de solo icono, que llevan `aria-label` |
+
+### Paleta · tokens de Tailwind 4
+
+Tailwind 4 se configura en CSS, no en `tailwind.config.js`. Los tokens viven en
+`frontend/src/index.css` y generan clases como `bg-fondo`, `text-acento` o `border-borde`:
 
 ```css
-:root {
-  --bg-primary: #F7F9F8;
-  --bg-card: #FFFFFF;
-  --bg-input: #FFFFFF;
-  --accent-primary: #0F766E;     /* verde azulado: acción principal */
-  --accent-secondary: #65A30D;   /* verde lima: estados positivos */
-  --accent-hover: #115E59;
-  --danger: #B91C1C;
-  --text-primary: #1F2937;
-  --text-secondary: #4B5563;
-  --text-muted: #6B7280;
-  --border: #E5E7EB;
-  --border-focus: #0F766E;
+@import "tailwindcss";
+
+@theme {
+  --color-fondo: #F7F9F8;
+  --color-tarjeta: #FFFFFF;
+  --color-acento: #0F766E;          /* verde azulado: acción principal */
+  --color-acento-hover: #115E59;
+  --color-positivo: #65A30D;        /* verde lima: estados positivos */
+  --color-peligro: #B91C1C;
+  --color-texto: #1F2937;
+  --color-texto-secundario: #4B5563;
+  --color-texto-tenue: #6B7280;
+  --color-borde: #E5E7EB;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 ```
+
+> Un color que no esté en `@theme` no se usa. Si hace falta uno nuevo, se agrega aquí primero,
+> con su propósito comentado.
+
+### Iconografía · Lucide
+
+| Regla | Valor |
+|-------|-------|
+| Biblioteca | `lucide-react`, importando cada icono por nombre: `import { Users } from 'lucide-react'` |
+| Tamaño | 20 px en texto y botones, 24 px en la navegación inferior |
+| Trazo | `strokeWidth={1.75}` en todo el sistema |
+| Color | Hereda del texto (`currentColor`): el icono nunca lleva un color propio |
+| Accesibilidad | Decorativo junto a texto: `aria-hidden`. Botón de solo icono: `aria-label` obligatorio |
+
+**Un icono por concepto, el mismo en toda la aplicación:**
+
+| Concepto | Icono |
+|----------|-------|
+| Panel | `LayoutDashboard` |
+| Empleados | `Users` |
+| Departamentos | `Building2` |
+| Proyectos | `FolderKanban` |
+| Horas | `Clock` |
+| Reportes | `BarChart3` |
+| Clima | `CloudSun` |
+| Tipo de cambio | `ArrowLeftRight` |
+| Exportar | `Download` |
+| Cerrar sesión | `LogOut` |
 
 | Uso | Fuente | Peso |
 |-----|--------|------|
@@ -256,7 +295,7 @@ Estética limpia de producto de gestión, asociada a sostenibilidad sin caer en 
 │               contenido de la vista          │
 │                                              │
 ├──────────────────────────────────────────────┤
-│  🏠     📁     ⏱     📊     ⋯               │  ← navegación inferior (móvil)
+│  Panel  Proyectos  Horas  Reportes  Más      │  ← navegación inferior (móvil), iconos Lucide
 └──────────────────────────────────────────────┘
 ```
 
@@ -404,7 +443,7 @@ Una tarea grande se divide en pasos que terminan en un commit funcional: modelo 
 | Hacer commit | `docs/agent_permissions.json` | `docs/seguridad_publicacion.md` |
 | Desplegar | `privado/deploy.md` | `proyecto_generico/deploy/` |
 | Agregar una variable de entorno | `docs/variables_entorno.md` | `privado/credentials.md` |
-| Trabajar la interfaz | `proyecto_generico/skills/skill_frontend.md` | `skill_responsive_design.md` |
+| Trabajar la interfaz | §7 de este archivo (tokens e iconos) | `proyecto_generico/skills/skill_frontend.md`, `skill_responsive_design.md` |
 | Patrones de React | `proyecto_generico/skills/skill_react_best_practices.md` (~80 KB, solo si hace falta) | — |
 
 ---

@@ -30,6 +30,7 @@ Seguro (TI3021)** de INACAP Valparaíso.
 | Capa | Tecnología |
 |---|---|
 | Interfaz | React 19 + Vite + TypeScript |
+| Estilos e iconos | Tailwind CSS 4 + Lucide |
 | API | Django 5 + Django REST Framework |
 | Base de datos | PostgreSQL 14 |
 | Servidor | VPS propio con Nginx y gunicorn, publicación continua desde `main` |

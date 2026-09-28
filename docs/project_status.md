@@ -59,7 +59,7 @@
 | 4 | App `nucleo` con `/api/health/` y su prueba | `feat(nucleo): endpoint de salud` |
 | 5 | Manejador de errores sin detalles internos | `security(nucleo): respuestas de error uniformes` |
 | 6 | `frontend/` con Vite + React + TS estricto | `chore(frontend): crear proyecto Vite` |
-| 7 | Tailwind y tokens de diseño de `CLAUDE.md` §7 | `style(frontend): tokens de color y tipografía` |
+| 7 | Tailwind 4 con los tokens de `@theme` y `lucide-react` | `style(frontend): tokens de Tailwind e iconos Lucide` |
 | 8 | Cliente HTTP y página que consulta `/api/health/` | `feat(frontend): verificar conexión con la API` |
 | 9 | Workflow de CI: pruebas y verificación de publicación | `chore(ci): pruebas en cada push` |
 | 10 | Instrucciones de ejecución local en el README | `docs(readme): ejecución local` |

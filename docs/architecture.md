@@ -207,6 +207,7 @@ frontend/src/
 │   ├── SesionProvider.tsx  usuario y token en memoria
 │   └── RutaProtegida.tsx   exige sesión y, opcionalmente, rol
 ├── components/             Boton, Campo, Tabla, EstadoVacio, EstadoError, Cargando
+│                           (Tailwind para estilos, Lucide para iconos)
 ├── features/
 │   ├── empleados/          hooks, formularios y tablas del módulo
 │   ├── departamentos/
@@ -222,6 +223,9 @@ frontend/src/
 | Datos del servidor | TanStack Query: caché, reintentos, invalidación tras cada mutación |
 | Sesión | Contexto de React, en memoria. Al recargar la página se renueva con la cookie |
 | Formularios | React Hook Form con esquemas Zod que reproducen las reglas de §4.1 de la especificación |
+
+| Estilos | Clases de Tailwind 4; los tokens de color y tipografía están en `src/index.css` (`@theme`) |
+| Iconos | `lucide-react`, un icono por concepto según la tabla de `CLAUDE.md` §7 |
 
 > Las reglas se validan **dos veces**: en Zod, para dar respuesta inmediata al usuario, y en la
 > API, que es la que manda. Si difieren, gana la API.
