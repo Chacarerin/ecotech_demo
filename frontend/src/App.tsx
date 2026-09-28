@@ -1,5 +1,7 @@
 import { Leaf } from 'lucide-react'
 
+import EstadoConexion from './components/EstadoConexion'
+
 export default function App() {
   return (
     <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-3 px-4">
@@ -10,6 +12,7 @@ export default function App() {
         <h1 className="text-2xl font-bold">EcoTech Solutions</h1>
       </div>
       <p className="text-texto-secundario">Sistema de gestión interna</p>
+      <EstadoConexion />
     </main>
   )
 }
