@@ -111,6 +111,11 @@ CSRF_TRUSTED_ORIGINS = lista("CSRF_TRUSTED_ORIGINS")
 CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
+    # JWT desde el inicio: sin sesión, la API responde 401 y no 403. Los endpoints
+    # para obtener y renovar el token se agregan con la autenticación, en el hito 2.
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework_simplejwt.authentication.JWTAuthentication"],
     # Todo endpoint exige sesión salvo que declare lo contrario de forma explícita
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    # Todas las respuestas de error con la misma forma y sin detalles internos
+    "EXCEPTION_HANDLER": "apps.nucleo.excepciones.manejar_excepcion",
 }
