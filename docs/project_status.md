@@ -28,7 +28,7 @@
 | 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
 | 7 | **Integraciones**: clima y tipo de cambio | RF-11 · RF-12 | ⏳ | |
 | 8 | **Deploy** en el VPS con CI | — | ⏳ | |
-| 9 | **Publicación** del repositorio | — | ⏳ | |
+| 9 | **Publicación** del repositorio | — | ✅ | 2026-09-28 |
 
 **Leyenda:** ✅ completado · 🔄 en progreso · 🔜 próximo · ⏳ pendiente · ❌ bloqueado
 
@@ -72,7 +72,7 @@
 |--------|---------|------------|--------|
 | Filtración de un dato del servidor en un archivo o commit | Alto | `.gitignore`, hook con patrones privados, revisión del docente antes de publicar | Controlado |
 | Pérdida de `FIELD_ENCRYPTION_KEY` | Alto | Respaldo en `privado/credentials.md` | Controlado |
-| El repositorio sirve de plantilla para copiar en la ES4 | Medio | Caso distinto (Viajes Aventura) y fecha de publicación a decidir (§7) | Abierto |
+| El repositorio sirve de plantilla para copiar en la ES4 | Medio | Caso distinto (Viajes Aventura); el código llega por hitos, no completo | Aceptado |
 | Dos dominios, CORS y CSRF | Medio | Checklist de verificación del deploy | Controlado |
 
 ---
@@ -89,6 +89,7 @@
 | Servicios externos sin clave de acceso | Se puede ejecutar sin registrarse en nada y no hay clave que filtrar |
 | Sin exportación a PDF | Excel basta para demostrar el polimorfismo; reduce dependencias |
 | Commits sin línea de coautoría de IA | Instrucción del docente; el trabajo con el agente se muestra en la documentación |
+| Repositorio público desde el hito 0, con el mismo nombre de la carpeta | Decidido por el docente el 2026-09-28: el proceso se muestra a medida que ocurre |
 
 ---
 
@@ -96,7 +97,6 @@
 
 | Decisión | Opciones | Nota |
 |----------|----------|------|
-| **Cuándo se hace público el repositorio** | Al cerrar el hito 0 · después de la ES4 (05-10-2026) · al terminar el proyecto | La ES4 es otro caso, pero es una aplicación: un ejemplo completo a la vista podría usarse como plantilla |
 | **Dominio de la demostración** | Supuesto: `ecotech.rubenschnettler.cl` y `ecotech-api.rubenschnettler.cl` | Convención del kit para subdominios, igual que el blog |
 | **Acceso a la demostración en línea** | Cuentas de demostración de solo lectura · sin acceso público | Evita que la base se llene de datos basura |
 
@@ -109,6 +109,7 @@
   (unidades 1 a 3 de TI3021).
 - La carpeta se renombró de `echotech_demo` a `ecotech_demo`.
 - Los PDF del caso quedaron en `assets/caso/`, fuera de git.
+- Repositorio creado en GitHub como público, con el nombre de la carpeta.
 
 ---
 
