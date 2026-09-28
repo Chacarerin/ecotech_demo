@@ -8,8 +8,8 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 0 · Documentación inicial |
-| **Progreso general** | 5 % |
+| **Fase actual** | Hito 1 · Esqueleto (8 de 10 tareas) |
+| **Progreso general** | 12 % |
 | **Próximo hito** | Hito 1 · Esqueleto del backend y de la interfaz |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
@@ -20,7 +20,7 @@
 | # | Hito | Requisitos | Estado | Fecha real |
 |---|------|------------|--------|------------|
 | 0 | **Documentación inicial**: visión, especificación, arquitectura, reglas del agente, seguridad de publicación | — | ✅ | 2026-09-28 |
-| 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | 🔜 | |
+| 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | 🔄 | |
 | 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ⏳ | |
 | 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ⏳ | |
 | 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ⏳ | |
@@ -104,6 +104,12 @@
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-28 · hito 1
+- Backend: Django 5.2 con settings por entorno, PostgreSQL local, `/api/health/` y errores uniformes. 5 pruebas en verde.
+- Interfaz: Vite 8, React 19 y TypeScript 6 estricto; Tailwind 4 con tokens; Lucide; fuentes propias.
+- **Tres correcciones en el camino, registradas en su propio commit:** el hook no detectaba la `SECRET_KEY` que escribe `startproject`; el usuario propio se declaró antes de migrar tras haber migrado con el estándar; sin JWT declarado, DRF respondía 403 en vez de 401.
+- Pendientes del hito: tareas 9 (CI) y 10 (README de ejecución local).
 
 ### 2026-09-28
 - Se generó la documentación inicial a partir del kit de inicio y del caso EcoTech Solutions

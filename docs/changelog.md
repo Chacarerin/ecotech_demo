@@ -10,9 +10,20 @@
 
 ## [Sin publicar]
 
+### Hito 1 · en progreso (8 de 10)
+- `[c87db27]` security(repo): detectar claves de Django escritas en el código
+- `[ad2b91e]` chore(backend): crear el proyecto Django con dependencias fijadas
+- `[3172dcb]` feat(config): separar settings por entorno y leerlos del .env
+- `[23bbec0]` test(config): configurar pytest sobre PostgreSQL
+- `[7bab437]` fix(usuarios): declarar el usuario propio antes de migrar
+- `[2f10b4a]` feat(nucleo): endpoint de salud que verifica la base de datos
+- `[2900814]` security(nucleo): respuestas de error uniformes y sin detalles internos
+- `[1c78369]` chore(frontend): crear la interfaz con Vite, React y TypeScript estricto
+- `[690cacf]` style(frontend): tokens de Tailwind 4, fuentes propias e iconos Lucide
+- `[7849cab]` feat(frontend): cliente HTTP y verificación de conexión con la API
+
 ### Próximo
-- Hito 1 · esqueleto del backend y de la interfaz. Plan de commits en
-  [`project_status.md`](project_status.md) §4.
+- CI de pruebas y verificación de publicación · instrucciones de ejecución local.
 
 ---
 
