@@ -8,9 +8,9 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 1 · Esqueleto (8 de 10 tareas) |
-| **Progreso general** | 12 % |
-| **Próximo hito** | Hito 1 · Esqueleto del backend y de la interfaz |
+| **Fase actual** | Hito 2 · Autenticación y roles |
+| **Progreso general** | 20 % |
+| **Próximo hito** | Hito 2 · Autenticación y roles |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
 ---
@@ -20,8 +20,8 @@
 | # | Hito | Requisitos | Estado | Fecha real |
 |---|------|------------|--------|------------|
 | 0 | **Documentación inicial**: visión, especificación, arquitectura, reglas del agente, seguridad de publicación | — | ✅ | 2026-09-28 |
-| 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | 🔄 | |
-| 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ⏳ | |
+| 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | ✅ | 2026-09-28 |
+| 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | 🔜 | |
 | 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ⏳ | |
 | 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ⏳ | |
 | 5 | **Registro de horas**, con sus reglas | RF-08 | ⏳ | |
@@ -49,20 +49,20 @@
 
 ---
 
-## 4. Próximos pasos · Hito 1
+## 4. Próximos pasos · Hito 2 · Autenticación y roles
 
 | # | Tarea | Commit esperado |
 |---|-------|-----------------|
-| 1 | Crear `backend/` con Django 5.2 y `requirements.txt` fijado | `chore(backend): crear proyecto Django` |
-| 2 | Settings modulares `base` · `dev` · `prod` leyendo del `.env` | `feat(config): separar settings por entorno` |
-| 3 | Conexión a PostgreSQL local y primera migración | `feat(config): conectar PostgreSQL` |
-| 4 | App `nucleo` con `/api/health/` y su prueba | `feat(nucleo): endpoint de salud` |
-| 5 | Manejador de errores sin detalles internos | `security(nucleo): respuestas de error uniformes` |
-| 6 | `frontend/` con Vite + React + TS estricto | `chore(frontend): crear proyecto Vite` |
-| 7 | Tailwind 4 con los tokens de `@theme` y `lucide-react` | `style(frontend): tokens de Tailwind e iconos Lucide` |
-| 8 | Cliente HTTP y página que consulta `/api/health/` | `feat(frontend): verificar conexión con la API` |
-| 9 | Workflow de CI: pruebas y verificación de publicación | `chore(ci): pruebas en cada push` |
-| 10 | Instrucciones de ejecución local en el README | `docs(readme): ejecución local` |
+| 1 | `rol` en `Usuario` como `TextChoices`: administrador, gerente, empleado | `feat(usuarios): rol del usuario` |
+| 2 | Inicio de sesión: token de acceso en la respuesta, renovación en cookie `HttpOnly` | `feat(auth): inicio de sesión con JWT` |
+| 3 | Renovación con rotación, y cierre de sesión que invalida la renovación | `feat(auth): renovar y cerrar sesión` |
+| 4 | `/api/auth/yo/`: usuario actual y su rol | `feat(auth): endpoint del usuario actual` |
+| 5 | Límite de cinco intentos por minuto en el inicio de sesión | `security(auth): limitar intentos de inicio de sesión` |
+| 6 | Permisos reutilizables por rol para los `viewsets` | `feat(nucleo): permisos por rol` |
+| 7 | Pruebas de sesión con los tres roles: permitido y denegado | `test(auth): sesión y permisos por rol` |
+| 8 | `SesionProvider`: token en memoria y renovación automática ante un 401 | `feat(frontend): sesión en memoria con renovación` |
+| 9 | Página de inicio de sesión con React Hook Form y Zod | `feat(frontend): página de inicio de sesión` |
+| 10 | Rutas protegidas y navegación con los iconos de `CLAUDE.md` §7 | `feat(frontend): rutas protegidas y navegación` |
 
 ---
 
@@ -104,6 +104,10 @@
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-28 · cierre del hito 1
+- CI en GitHub Actions con tres trabajos —backend contra PostgreSQL 14, interfaz en Node 20.20, verificación de publicación—; verde en su primera ejecución.
+- README con la ejecución local, verificado siguiendo sus pasos sobre un clon limpio.
 
 ### 2026-09-28 · hito 1
 - Backend: Django 5.2 con settings por entorno, PostgreSQL local, `/api/health/` y errores uniformes. 5 pruebas en verde.

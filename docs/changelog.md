@@ -10,20 +10,37 @@
 
 ## [Sin publicar]
 
-### Hito 1 · en progreso (8 de 10)
-- `[c87db27]` security(repo): detectar claves de Django escritas en el código
+### Próximo
+- Hito 2 · autenticación y roles. Plan de commits en [`project_status.md`](project_status.md) §4.
+
+---
+
+## [0.2.0] - 2026-09-28 · Hito 1 · Esqueleto
+
+Backend y interfaz conectados, con pruebas y CI desde el primer día. Tres errores se detectaron en
+el camino, y cada corrección quedó explicada en el cuerpo de su commit: la clave que escribe
+`startproject` no la detectaba el hook (`c87db27`), el usuario propio se declaró después de migrar
+(`7bab437`) y, sin JWT declarado, la API respondía 403 en vez de 401 (`2900814`).
+
+### Añadido
 - `[ad2b91e]` chore(backend): crear el proyecto Django con dependencias fijadas
 - `[3172dcb]` feat(config): separar settings por entorno y leerlos del .env
 - `[23bbec0]` test(config): configurar pytest sobre PostgreSQL
-- `[7bab437]` fix(usuarios): declarar el usuario propio antes de migrar
 - `[2f10b4a]` feat(nucleo): endpoint de salud que verifica la base de datos
-- `[2900814]` security(nucleo): respuestas de error uniformes y sin detalles internos
 - `[1c78369]` chore(frontend): crear la interfaz con Vite, React y TypeScript estricto
 - `[690cacf]` style(frontend): tokens de Tailwind 4, fuentes propias e iconos Lucide
 - `[7849cab]` feat(frontend): cliente HTTP y verificación de conexión con la API
+- `[87c3664]` chore(ci): pruebas, build y verificación de publicación en cada push
 
-### Próximo
-- CI de pruebas y verificación de publicación · instrucciones de ejecución local.
+### Seguridad
+- `[c87db27]` security(repo): detectar claves de Django escritas en el código
+- `[2900814]` security(nucleo): respuestas de error uniformes y sin detalles internos
+
+### Corregido
+- `[7bab437]` fix(usuarios): declarar el usuario propio antes de migrar
+
+### Documentación
+- `[f00838e]` docs(readme): ejecución local paso a paso, verificada desde cero
 
 ---
 
