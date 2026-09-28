@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Rechaza el commit si lo preparado contiene datos que no deben publicarse.
+exec bash "$(git rev-parse --show-toplevel)/scripts/verificar_publicacion.sh"

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Valida el mensaje de commit:
+#   1. Formato convencional: tipo(scope): descripción, con tipos del proyecto.
+#   2. Título de 72 caracteres como máximo.
+#   3. Sin líneas de coautoría automática: la autoría del repositorio es del
+#      docente, y el trabajo con el agente se documenta en CLAUDE.md y docs/.
+#
+MSG_FILE="$1"
+TITULO=$(head -n1 "$MSG_FILE")
+
+if ! grep -qE '^(feat|fix|refactor|style|docs|test|chore|security)(\([a-z0-9_-]+\))?: .+' <<< "$TITULO"; then
+  echo "✗ El título no sigue el formato tipo(scope): descripción"
+  echo "  Tipos admitidos: feat fix refactor style docs test chore security"
+  echo "  Recibido: $TITULO"
+  exit 1
+fi
+
+if (( ${#TITULO} > 72 )); then
+  echo "✗ El título tiene ${#TITULO} caracteres; el máximo es 72."
+  exit 1
+fi
+
+if grep -qiE '^co-authored-by:.*(claude|anthropic|openai|copilot|gpt)' "$MSG_FILE"; then
+  echo "✗ El mensaje incluye una línea de coautoría automática. Elimínela."
+  exit 1
+fi
