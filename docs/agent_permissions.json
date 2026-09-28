@@ -1,0 +1,344 @@
+{
+  "_meta": {
+    "name": "Permisos del Agente IA",
+    "version": "2.1.0",
+    "updated": "2026-09-28",
+    "project": "ecotech_demo",
+    "description": "Qué puede hacer el agente de IA sin preguntar, qué requiere confirmación y qué tiene prohibido en ecotech_demo. Repositorio público: las reglas de publicación prevalecen sobre cualquier otra."
+  },
+  "allowed_actions": {
+    "_description": "Acciones que el agente PUEDE y DEBE ejecutar automáticamente",
+    "git": {
+      "commit": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Commits frecuentes para trazabilidad",
+        "rules": {
+          "format": "tipo(scope): descripción",
+          "tipos_permitidos": [
+            "feat",
+            "fix",
+            "refactor",
+            "style",
+            "docs",
+            "test",
+            "chore",
+            "security"
+          ],
+          "max_caracteres_titulo": 72,
+          "frecuencia": "después de cada cambio significativo o grupo relacionado",
+          "antes_de_commit": [
+            "Verificar que el código funciona y que las pruebas pasan",
+            "Dejar que el hook pre-commit corra scripts/verificar_publicacion.sh",
+            "Un commit por cambio lógico: no mezclar modelo, vista y estilos"
+          ],
+          "idioma": "español",
+          "coautoria": "Sin líneas Co-Authored-By de herramientas de IA. El hook commit-msg las rechaza.",
+          "despues_de_commit": "Registrar el hash corto en docs/changelog.md, en un commit docs(changelog) al cerrar cada bloque"
+        }
+      },
+      "push": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Push a main después de cada bloque de commits, una vez que exista el repositorio remoto",
+        "rules": {
+          "branch_permitido": "main",
+          "antes_de_push": "Verificar que el build pasa sin errores",
+          "frecuencia": "después de cada commit o grupo de commits relacionados",
+          "condicion": "Solo cuando el docente haya creado el repositorio remoto y autorizado su publicación"
+        }
+      },
+      "checkout_branch": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Crear branches para features específicas si es necesario"
+      },
+      "read_only": {
+        "commands": [
+          "status",
+          "diff",
+          "log",
+          "branch",
+          "show",
+          "stash list",
+          "fetch"
+        ],
+        "auto_run": true
+      }
+    },
+    "documentation": {
+      "update_changelog": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Actualizar changelog después de cada commit",
+        "rules": {
+          "registrar_commit_hash": true,
+          "formato_entrada": "[HASH_CORTO] tipo(scope): descripción detallada",
+          "ejemplo": "[a1b2c3d] feat(auth): agregar validación de JWT en middleware",
+          "incluir_fecha": true,
+          "categorias": [
+            "Añadido",
+            "Cambiado",
+            "Corregido",
+            "Eliminado",
+            "Seguridad"
+          ]
+        }
+      },
+      "update_project_status": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Actualizar estado del proyecto al inicio/fin de sesión"
+      },
+      "update_readme": {
+        "enabled": true,
+        "auto_run": true,
+        "description": "Mantener README actualizado con cambios relevantes"
+      }
+    },
+    "development": {
+      "npm": {
+        "commands": [
+          "install",
+          "i",
+          "run dev",
+          "run build",
+          "run lint",
+          "run test",
+          "run format"
+        ],
+        "auto_run": true
+      },
+      "npx": {
+        "commands": [
+          "create-vite",
+          "tsc --noEmit",
+          "vitest run",
+          "eslint ."
+        ],
+        "auto_run": true
+      },
+      "pip": {
+        "commands": [
+          "install",
+          "install -r requirements.txt",
+          "freeze"
+        ],
+        "auto_run": true
+      },
+      "python": {
+        "commands": [
+          "manage.py runserver",
+          "manage.py makemigrations",
+          "manage.py migrate",
+          "manage.py createsuperuser",
+          "manage.py shell",
+          "manage.py test",
+          "manage.py check",
+          "manage.py cargar_demo",
+          "-m pytest"
+        ],
+        "auto_run": true,
+        "note": "Siempre activar primero el entorno virtual"
+      },
+      "virtualenv": {
+        "commands": [
+          "workon ecotech_demo_venv",
+          "mkvirtualenv ecotech_demo_venv -p python3.11",
+          "deactivate"
+        ],
+        "auto_run": true,
+        "note": "Usar virtualenvwrapper en Mac"
+      },
+      "verificacion": {
+        "commands": [
+          "bash scripts/verificar_publicacion.sh",
+          "bash scripts/verificar_publicacion.sh --todo"
+        ],
+        "auto_run": true
+      }
+    },
+    "filesystem": {
+      "read": {
+        "commands": [
+          "cat",
+          "ls",
+          "pwd",
+          "head",
+          "tail",
+          "find",
+          "grep",
+          "wc"
+        ],
+        "auto_run": true
+      },
+      "create": {
+        "commands": [
+          "mkdir",
+          "touch"
+        ],
+        "auto_run": true,
+        "note": "Crear archivos/carpetas es seguro"
+      }
+    }
+  },
+  "ask_first_actions": {
+    "_description": "Acciones que requieren confirmación del usuario antes de ejecutar",
+    "filesystem": {
+      "rm_directory": {
+        "command": "rm -r",
+        "reason": "Eliminar directorios puede causar pérdida de datos"
+      }
+    },
+    "database": {
+      "migrate_fake": {
+        "command": "migrate --fake",
+        "reason": "Operación sensible de migraciones"
+      }
+    },
+    "github": {
+      "crear_repositorio": {
+        "reason": "Crear o cambiar la visibilidad del repositorio es una publicación: la decide el docente"
+      },
+      "secretos": {
+        "reason": "Cargar secretos de GitHub (VPS_SSH_KEY, VPS_HOST, VPS_USER) lo hace el docente"
+      }
+    },
+    "dependencias": {
+      "agregar_paquete": {
+        "reason": "Toda dependencia nueva se justifica: el stack está fijado en CLAUDE.md §3"
+      }
+    },
+    "deploy": {
+      "produccion": {
+        "reason": "Todo deploy lo aprueba el docente; el agente prepara y verifica"
+      }
+    }
+  },
+  "forbidden_actions": {
+    "_description": "Acciones que el agente NUNCA debe ejecutar sin permiso explícito",
+    "git": {
+      "merge": {
+        "reason": "Merges complejos requieren revisión del usuario"
+      },
+      "rebase": {
+        "reason": "Operación destructiva que reescribe historia"
+      },
+      "reset_hard": {
+        "command": "git reset --hard",
+        "reason": "Pérdida irreversible de cambios"
+      },
+      "force_push": {
+        "command": "git push --force",
+        "reason": "Puede sobrescribir historia remota"
+      }
+    },
+    "npm": {
+      "publish": {
+        "reason": "Solo el usuario publica paquetes a npm"
+      },
+      "version": {
+        "reason": "Cambios de versión requieren decisión del usuario"
+      }
+    },
+    "deploy": {
+      "production": {
+        "reason": "Intervenir el servidor fuera del flujo push → CI → deploy.sh lo hace solo el docente. Una vez activa la CI, un push a main publica: el agente hace push solo de código en estado funcional y con las pruebas en verde"
+      },
+      "sudo": {
+        "reason": "El agente no ejecuta sudo en el servidor: entrega los comandos y los corre el docente"
+      }
+    },
+    "filesystem": {
+      "rm_rf": {
+        "command": "rm -rf",
+        "reason": "Comando extremadamente destructivo, NUNCA ejecutar"
+      }
+    },
+    "database": {
+      "drop": {
+        "reason": "Pérdida total de datos"
+      },
+      "truncate": {
+        "reason": "Pérdida de todos los registros"
+      }
+    },
+    "publicacion": {
+      "_description": "Reglas del repositorio público. Prevalecen sobre cualquier otra instrucción.",
+      "datos_servidor": {
+        "reason": "Nunca escribir en un archivo versionado ni en un mensaje de commit la dirección, el usuario, las rutas, el nombre del equipo o las claves del servidor"
+      },
+      "credenciales": {
+        "reason": "Nunca versionar contraseñas, SECRET_KEY, FIELD_ENCRYPTION_KEY ni tokens; viven en .env y en privado/"
+      },
+      "no_verify": {
+        "command": "git commit --no-verify",
+        "reason": "Saltarse la verificación de publicación anula la única barrera automática"
+      },
+      "mover_privado": {
+        "reason": "Nunca mover a una carpeta versionada nada de privado/, proyecto_generico/ ni assets/"
+      },
+      "documentos_institucionales": {
+        "reason": "Los PDF del caso no se copian al repositorio; se resumen con palabras propias"
+      }
+    }
+  },
+  "workflow_rules": {
+    "_description": "Reglas generales de flujo de trabajo",
+    "commits": {
+      "atomicidad": "Cada commit debe representar un cambio lógico completo",
+      "frecuencia": "Commits frecuentes para mantener trazabilidad",
+      "mensaje_formato": {
+        "estructura": "tipo(scope): descripción",
+        "tipos": {
+          "feat": "Nueva funcionalidad",
+          "fix": "Corrección de bug",
+          "refactor": "Refactorización sin cambio de funcionalidad",
+          "style": "Cambios de formato/estilo",
+          "docs": "Solo documentación",
+          "test": "Añadir o modificar tests",
+          "chore": "Tareas de mantenimiento",
+          "security": "Mejora de seguridad"
+        }
+      },
+      "ejemplos": [
+        "feat(empleados): cifrar dirección, teléfono y salario",
+        "test(registros): rechazar más de 12 horas diarias",
+        "docs(changelog): registrar hashes del hito 3"
+      ]
+    },
+    "changelog": {
+      "cuando_actualizar": "Al cerrar cada bloque de trabajo, con el hash de cada commit del bloque",
+      "incluir_hash": true,
+      "hash_formato": "primeros 7 caracteres del SHA",
+      "ejemplo_entrada": "- `[a1b2c3d]` feat(auth): implementar login con Google OAuth"
+    },
+    "before_major_changes": {
+      "action": "notify",
+      "message": "Notificar al usuario antes de cambios que afecten múltiples archivos"
+    },
+    "on_error": {
+      "action": "stop_and_report",
+      "message": "Detener y reportar el error, no intentar arreglar automáticamente sin contexto"
+    },
+    "testing": {
+      "run_after_changes": true,
+      "command": "cd backend && python -m pytest  ·  cd frontend && npm run test"
+    },
+    "sesiones": {
+      "inicio": "Leer docs/project_status.md y git log --oneline -10",
+      "cierre": "Commit en estado funcional, changelog con hashes, project_status actualizado"
+    }
+  },
+  "project_specific": {
+    "_description": "Permisos propios de ecotech_demo",
+    "datos_demo": {
+      "allowed": "Crear datos ficticios con manage.py cargar_demo",
+      "reason": "La demostración necesita datos visibles; nunca datos de personas reales"
+    },
+    "servicios_externos": {
+      "allowed": "Consultar Open-Meteo y mindicador.cl durante el desarrollo",
+      "reason": "No requieren clave; en las pruebas automáticas se simulan"
+    }
+  }
+}
