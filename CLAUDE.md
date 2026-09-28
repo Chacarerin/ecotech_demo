@@ -243,6 +243,11 @@ Tailwind 4 se configura en CSS, no en `tailwind.config.js`. Los tokens viven en
 > Un color que no esté en `@theme` no se usa. Si hace falta uno nuevo, se agrega aquí primero,
 > con su propósito comentado.
 
+> [!CAUTION]
+> **`positivo` (#65A30D) no se usa para texto:** sobre el fondo da 2,9:1 y no alcanza el
+> contraste AA de 4,5:1. Va en iconos, bordes y fondos; el texto de un estado positivo usa
+> `texto` o `acento` (5,2:1). Se detectó en una captura del hito 2, no en una prueba.
+
 ### Iconografía · Lucide
 
 | Regla | Valor |

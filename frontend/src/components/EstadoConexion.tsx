@@ -32,8 +32,9 @@ export default function EstadoConexion() {
   }
 
   return (
-    <p className="flex items-center gap-2 text-positivo" role="status">
-      <CircleCheck size={20} strokeWidth={1.75} aria-hidden />
+    <p className="flex items-center gap-2 text-texto" role="status">
+      {/* El verde lima no alcanza contraste AA como texto: va solo en el icono */}
+      <CircleCheck size={20} strokeWidth={1.75} className="text-positivo" aria-hidden />
       Servidor en línea · base de datos {data.base === 'ok' ? 'conectada' : 'con problemas'}
     </p>
   )
