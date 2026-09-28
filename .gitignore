@@ -1,0 +1,94 @@
+# ==================================================
+# .gitignore · ecotech_demo
+# ==================================================
+# Este repositorio es PÚBLICO. A diferencia de los proyectos de clientes,
+# aquí la documentación de trabajo (CLAUDE.md y docs/) SÍ se versiona: es
+# justamente lo que se quiere mostrar. Lo que nunca se publica está en las
+# dos primeras secciones y no admite excepciones.
+# ==================================================
+
+# ============================================
+# 🔒 PRIVADO · datos del servidor y credenciales
+# ============================================
+# Guía de deploy real, credenciales, archivos de configuración del servidor
+# y la lista de patrones que el hook de pre-commit bloquea.
+privado/
+
+# El kit de documentación copiado dentro del proyecto. Contiene el
+# inventario real del VPS: no se publica bajo ninguna circunstancia.
+proyecto_generico/
+
+# Insumos de trabajo: los documentos institucionales del caso.
+assets/
+
+# ============================================
+# 🔐 VARIABLES DE ENTORNO Y SECRETOS
+# ============================================
+# Se ignora todo .env* y se rescata solo el ejemplo.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_*
+*_ci
+*_ci.pub
+
+# ============================================
+# 🐍 PYTHON / DJANGO
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+*_venv/
+.venv/
+env/
+pip-log.txt
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+db_backups/
+
+# ============================================
+# 📦 NODE.JS / JAVASCRIPT
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+dist_backups/
+build/
+.vite/
+
+# ============================================
+# 🧪 TESTING
+# ============================================
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# ============================================
+# 💻 EDITORES Y SISTEMA OPERATIVO
+# ============================================
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+._*
+Thumbs.db
+*.bak
+*.tmp
+
+# Configuración local del agente (permisos de la máquina de desarrollo)
+.claude/settings.local.json
