@@ -6,7 +6,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 from apps.nucleo.permisos import EsAdministrador, EsGerenteOAdministrador
-from apps.organizacion.views import departamento_de
+from apps.organizacion.views import del_departamento_del_gerente, departamento_de
 
 from .models import Asignacion, Proyecto
 from .serializers import AsignacionSerializer, ProyectoSerializer
@@ -33,7 +33,7 @@ class ProyectoViewSet(viewsets.ModelViewSet):
         consulta = Proyecto.objects.annotate(
             asignados_vigentes=Count("asignaciones", filter=vigente("asignaciones__"), distinct=True))
         if usuario.es_gerente:
-            consulta = consulta.filter(asignaciones__empleado__departamento_id=departamento_de(usuario))
+            consulta = del_departamento_del_gerente(consulta, usuario, "asignaciones__empleado__departamento_id")
         elif not usuario.es_administrador:
             consulta = consulta.filter(asignaciones__empleado__usuario=usuario)
 
@@ -57,7 +57,7 @@ class AsignacionViewSet(viewsets.ModelViewSet):
         usuario = self.request.user
         consulta = Asignacion.objects.select_related("empleado", "proyecto")
         if usuario.es_gerente:
-            consulta = consulta.filter(empleado__departamento_id=departamento_de(usuario))
+            consulta = del_departamento_del_gerente(consulta, usuario, "empleado__departamento_id")
         elif not usuario.es_administrador:
             consulta = consulta.filter(empleado__usuario=usuario)
         for filtro in ("proyecto", "empleado"):

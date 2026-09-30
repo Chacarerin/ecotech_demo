@@ -21,6 +21,16 @@ def departamento_de(usuario):
     return empleado.departamento_id if empleado else None
 
 
+def del_departamento_del_gerente(consulta, usuario, campo: str):
+    """Filtra la consulta al departamento del gerente. Sin departamento, no ve nada.
+
+    No se filtra con departamento_id=None: Django lo convierte en IS NULL y, al cruzar
+    tablas, deja ver todo lo que no tiene departamento o no tiene relaciones.
+    """
+    depto = departamento_de(usuario)
+    return consulta.none() if depto is None else consulta.filter(**{campo: depto})
+
+
 class DepartamentoViewSet(viewsets.ModelViewSet):
     """Administración: todo. Gerente: solo ver el suyo. Empleado: nada."""
 
@@ -34,7 +44,7 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
         consulta = Departamento.objects.select_related("gerente").annotate(cantidad_empleados=Count("empleados"))
         if self.request.user.es_administrador:
             return consulta
-        return consulta.filter(pk=departamento_de(self.request.user))
+        return del_departamento_del_gerente(consulta, self.request.user, "pk")
 
 
 class EmpleadoViewSet(viewsets.ModelViewSet):
@@ -50,7 +60,7 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         if usuario.es_administrador:
             pass
         elif usuario.es_gerente:
-            consulta = consulta.filter(departamento_id=departamento_de(usuario))
+            consulta = del_departamento_del_gerente(consulta, usuario, "departamento_id")
         else:
             consulta = consulta.filter(usuario=usuario)
 
