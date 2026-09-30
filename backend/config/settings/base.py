@@ -26,6 +26,10 @@ def lista(nombre: str, por_defecto: str = "") -> list[str]:
 
 
 SECRET_KEY = obligatoria("SECRET_KEY")
+
+# Clave Fernet de los datos personales cifrados. Si se pierde, esos datos quedan
+# ilegibles para siempre: se respalda fuera del repositorio y nunca se regenera.
+FIELD_ENCRYPTION_KEY = obligatoria("FIELD_ENCRYPTION_KEY")
 ALLOWED_HOSTS = lista("ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 INSTALLED_APPS = [

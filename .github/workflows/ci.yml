@@ -45,6 +45,8 @@ jobs:
       DB_PASSWORD: solo-ci-desechable
       DB_HOST: localhost
       DB_PORT: "5432"
+      # Clave Fernet desechable: es la frase «solo-ci-desechable-no-es-real-32» en base64
+      FIELD_ENCRYPTION_KEY: c29sby1jaS1kZXNlY2hhYmxlLW5vLWVzLXJlYWwtMzI=
 
     defaults:
       run:
