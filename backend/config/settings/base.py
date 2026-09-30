@@ -125,12 +125,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     # Todas las respuestas de error con la misma forma y sin detalles internos
     "EXCEPTION_HANDLER": "apps.nucleo.excepciones.manejar_excepcion",
-    # Límite de intentos: lo aplican las vistas que declaran throttle_scope
-    "DEFAULT_THROTTLE_RATES": {"inicio_sesion": "5/min"},
+    # Límite de intentos: lo aplican las vistas que declaran throttle_scope. Es por dirección IP,
+    # y un laboratorio completo sale a internet con una sola: 10 deja entrar a un curso por tandas
+    # sin dejar de frenar un ataque de fuerza bruta.
+    "DEFAULT_THROTTLE_RATES": {"inicio_sesion": "10/min"},
 }
 
 # El contador de intentos vive en la memoria de cada proceso. Con tres procesos de
-# gunicorn, el límite real llega a 15 por minuto: sigue frenando un ataque de fuerza
+# gunicorn, el límite real llega a 30 por minuto: sigue frenando un ataque de fuerza
 # bruta, sin instalar Redis en un servidor que no lo tiene (CLAUDE.md §10).
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 
