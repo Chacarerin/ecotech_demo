@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Propias
     "apps.nucleo",
     "apps.usuarios",
+    "apps.organizacion",
 ]
 
 MIDDLEWARE = [
