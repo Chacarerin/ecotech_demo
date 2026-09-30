@@ -62,6 +62,9 @@ backend/apps/
 Esta sección existe porque el repositorio es material de la asignatura. Cada concepto se aplica
 donde resuelve un problema real del sistema.
 
+Los diagramas UML completos —clases, casos de uso y secuencia, en notación de la Unidad 1— están en
+[`uml.md`](uml.md).
+
 ### 3.1 Herencia · modelos base abstractos
 
 ```
@@ -234,17 +237,20 @@ frontend/src/
 
 ## 6. Seguridad
 
+El detalle completo, capa por capa y con cada control ubicado en el código, está en
+[`seguridad.md`](seguridad.md). En resumen:
+
 | Amenaza | Control |
 |---------|---------|
 | Contraseñas débiles | Validadores de Django: longitud mínima 10, no comunes, no numéricas |
-| Fuerza bruta | Límite de 5 intentos por minuto en `/api/auth/token/` (throttling de DRF) |
+| Fuerza bruta | Límite de 10 intentos por minuto en `/api/auth/token/` (throttling de DRF) |
 | Robo del token | Acceso de 15 minutos en memoria; renovación en cookie `HttpOnly`, `Secure`, `SameSite=Lax` |
 | Acceso indebido entre roles | Permisos DRF por `viewset` y `get_queryset()` filtrado por rol |
-| Inyección SQL | ORM de Django; ninguna consulta con cadenas concatenadas |
+| Inyección SQL | Consultas parametrizadas por el ORM de Django; ninguna consulta con cadenas concatenadas |
 | XSS | React escapa por defecto; prohibido `dangerouslySetInnerHTML` |
 | Datos personales expuestos en la base | `CampoCifrado` para dirección, teléfono y salario |
-| Filtración de detalles internos | Manejador de excepciones propio; `DEBUG=False` en producción |
-| Dependencias vulnerables | `pip-audit` y `npm audit` en la CI |
+| Filtración de detalles internos | Manejador de excepciones propio; `DEBUG=False` y solo JSON en producción |
+| Dependencias vulnerables | Versiones fijadas. **Pendiente:** `pip-audit` y `npm audit` en la CI |
 
 ---
 
