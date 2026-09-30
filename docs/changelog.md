@@ -15,6 +15,20 @@
 
 ---
 
+## [Documentación] - 2026-09-30 · Seguridad, UML y stack
+
+- `docs/seguridad.md`: cada control, capa por capa, con el archivo que lo implementa. Explica la
+  parametrización de la configuración y las consultas parametrizadas contra la inyección SQL, y
+  cierra con la correspondencia con OWASP Top 10.
+- `docs/uml.md`: diagramas de clases, de casos de uso y de secuencia en Mermaid, con la
+  correspondencia entre cada notación UML y su implementación en Django. Es la Unidad 1 de la
+  asignatura aplicada al sistema real.
+- `docs/stack.md` y `requirements.txt` en la raíz, que remite a `backend/requirements.txt`.
+- **Hallazgo:** `architecture.md` afirmaba que la CI ejecutaba `pip-audit` y `npm audit`, y no es así.
+  Ahora figura como pendiente. Las versiones del stack en `CLAUDE.md` también estaban desactualizadas.
+
+---
+
 ## [0.7.0] - 2026-09-30 · Identidad visual y tema oscuro
 
 La interfaz deja de verse como una plantilla: paleta propia en dos temas, tipografías con carácter,

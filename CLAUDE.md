@@ -53,18 +53,21 @@ bajo gunicorn, en el mismo repositorio y el mismo VPS.
 
 | Capa | Tecnología | Versión |
 |------|------------|---------|
-| Interfaz | React + Vite + TypeScript | React 19 · Vite 7 · TS 5 |
+| Interfaz | React + Vite + TypeScript | React 19 · Vite 8 · TS 6 |
 | Estilos | Tailwind CSS, con los tokens de §7 en `@theme` | 4 |
 | Iconos | Lucide (`lucide-react`) | — |
 | Datos en la interfaz | TanStack Query | 5 |
 | Formularios | React Hook Form + Zod | — |
-| API | Django + Django REST Framework | Django 5.2 LTS · DRF 3.16 |
+| API | Django + Django REST Framework | Django 5.2 LTS · DRF 3.18 |
 | Autenticación | djangorestframework-simplejwt | 5 |
 | Cifrado de campos | `cryptography` (Fernet) | — |
-| Exportación | `openpyxl` para Excel, `csv` de la biblioteca estándar | — |
+| Exportación | `openpyxl` para Excel (hito 6), `csv` de la biblioteca estándar | — |
 | Base de datos | PostgreSQL | **14, en todos los entornos** |
 | Python | CPython | **3.11** |
 | Servidor | Nginx + gunicorn + systemd | — |
+
+Versiones exactas y razón de cada dependencia: [`docs/stack.md`](docs/stack.md). **Al agregar o
+actualizar una dependencia, se actualiza esa tabla en el mismo commit.**
 
 **Por qué el Stack C y no el B.** El caso pide una interfaz con comportamiento de aplicación
 —registro de horas en terreno, filtros, asignaciones— y la asignatura trabaja el consumo de APIs:

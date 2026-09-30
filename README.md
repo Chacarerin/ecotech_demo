@@ -43,6 +43,15 @@ Seguro (TI3021)** de INACAP Valparaíso.
 | Base de datos | PostgreSQL 14 |
 | Servidor | VPS propio con Nginx y gunicorn, publicación continua desde `main` |
 
+Las versiones exactas y el porqué de cada dependencia están en [`docs/stack.md`](docs/stack.md). Las
+dependencias de Python se instalan con `pip install -r requirements.txt` desde la raíz.
+
+| Documento | Qué explica |
+|---|---|
+| [`docs/uml.md`](docs/uml.md) | Diagramas de clases, de casos de uso y de secuencia del sistema |
+| [`docs/seguridad.md`](docs/seguridad.md) | Cada control de seguridad, capa por capa, y dónde está en el código |
+| [`docs/stack.md`](docs/stack.md) | Tecnologías, versiones y por qué se eligió cada una |
+
 ```
    Navegador ──► Interfaz React (archivos estáticos)
        │
