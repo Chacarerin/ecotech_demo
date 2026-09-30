@@ -5,7 +5,7 @@ import { ErrorApi } from '../api/cliente'
 export function EstadoError({ error }: { error: unknown }) {
   const mensaje = error instanceof ErrorApi ? error.message : 'No se pudo cargar la información.'
   return (
-    <p className="flex items-center gap-2 rounded-lg bg-peligro/10 p-4 text-peligro" role="alert">
+    <p className="flex items-center gap-2 rounded-xl bg-peligro/10 p-4 text-peligro" role="alert">
       <CircleAlert size={20} strokeWidth={1.75} aria-hidden />
       {mensaje}
     </p>

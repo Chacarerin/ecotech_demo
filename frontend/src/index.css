@@ -1,31 +1,98 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/bricolage-grotesque";
 @import "@fontsource-variable/jetbrains-mono";
 
 /*
  * Tokens de diseño · CLAUDE.md §7.
- * Tailwind 4 genera una clase por token: bg-fondo, text-acento, border-borde…
- * Un color que no esté aquí no se usa en la interfaz.
+ *
+ * Cada color tiene dos valores, uno por tema, en :root y en .dark. @theme inline expone la
+ * variable a Tailwind, que genera bg-fondo, text-acento, border-borde… y las variantes con
+ * opacidad (bg-acento/10). Un color que no esté aquí no se usa en la interfaz.
+ *
+ * El tema oscuro se activa con la clase .dark en <html>: la pone public/tema.js antes de pintar
+ * y la cambia el botón de tema. El claro es el de omisión: se lee a pleno sol.
  */
-@theme {
-  --color-fondo: #F7F9F8;
-  --color-tarjeta: #FFFFFF;
-  --color-acento: #0F766E;          /* verde azulado: acción principal */
-  --color-acento-hover: #115E59;
-  --color-positivo: #65A30D;        /* verde lima: estados positivos */
-  --color-peligro: #B91C1C;
-  --color-texto: #1F2937;
-  --color-texto-secundario: #4B5563;
-  --color-texto-tenue: #6B7280;
-  --color-borde: #E5E7EB;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  --font-sans: "Inter Variable", system-ui, sans-serif;
+:root {
+  color-scheme: light;
+  --fondo: #F5F4EE;             /* papel cálido, no blanco de pantalla */
+  --tarjeta: #FFFFFF;
+  --superficie: #EDECE4;        /* fondos de apoyo: hover, chips, filas alternas */
+  --acento: #0F5F4B;            /* verde bosque: acción principal · 7,6:1 sobre tarjeta */
+  --acento-hover: #0A4A3A;
+  --sobre-acento: #FFFFFF;      /* texto sobre un botón de acento */
+  --portada: #0F5F4B;           /* bloques de marca: bienvenida del panel y presentación del ingreso */
+  --sobre-portada: #FFFFFF;
+  --sol: #A1560B;               /* ámbar: lo destacado y lo pendiente · 5,1:1 sobre tarjeta */
+  --positivo: #65A30D;          /* verde lima: solo iconos y bordes, nunca texto */
+  --peligro: #B91C1C;
+  --texto: #18211D;
+  --texto-secundario: #46524C;
+  --texto-tenue: #66706A;
+  --borde: #E2E0D6;
+  --sombra: 24 33 29;           /* canal RGB de la sombra */
+}
+
+.dark {
+  color-scheme: dark;
+  --fondo: #0C1310;
+  --tarjeta: #131C18;
+  --superficie: #1A2621;
+  --acento: #5CC4A2;
+  --acento-hover: #7DD3B6;
+  --sobre-acento: #06201A;
+  --portada: #12382E;           /* en oscuro, un verde profundo: el acento claro en bloque encandila */
+  --sobre-portada: #E7ECE9;
+  --sol: #EFB25A;
+  --positivo: #84CC16;
+  --peligro: #F58A8A;
+  --texto: #E7ECE9;
+  --texto-secundario: #B0BBB5;
+  --texto-tenue: #87938D;
+  --borde: #25332D;
+  --sombra: 0 0 0;
+}
+
+@theme inline {
+  --color-fondo: var(--fondo);
+  --color-tarjeta: var(--tarjeta);
+  --color-superficie: var(--superficie);
+  --color-acento: var(--acento);
+  --color-acento-hover: var(--acento-hover);
+  --color-sobre-acento: var(--sobre-acento);
+  --color-portada: var(--portada);
+  --color-sobre-portada: var(--sobre-portada);
+  --color-sol: var(--sol);
+  --color-positivo: var(--positivo);
+  --color-peligro: var(--peligro);
+  --color-texto: var(--texto);
+  --color-texto-secundario: var(--texto-secundario);
+  --color-texto-tenue: var(--texto-tenue);
+  --color-borde: var(--borde);
+
+  --shadow-suave: 0 1px 2px rgb(var(--sombra) / 0.05), 0 2px 8px -4px rgb(var(--sombra) / 0.08);
+  --shadow-elevada: 0 2px 4px rgb(var(--sombra) / 0.06), 0 12px 28px -12px rgb(var(--sombra) / 0.22);
+
+  --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Instrument Sans Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 }
 
 @layer base {
   body {
-    @apply bg-fondo font-sans text-texto antialiased;
+    @apply bg-fondo font-sans text-texto antialiased transition-colors duration-300;
+  }
+  h1, h2, h3 {
+    @apply font-display tracking-tight;
+  }
+  ::selection {
+    @apply bg-acento/20;
+  }
+  /* Foco visible y consistente en todo lo que se puede enfocar con el teclado */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-acento;
   }
   /* 16 px en campos: evita el zoom automático de iOS al enfocar */
   input, select, textarea {

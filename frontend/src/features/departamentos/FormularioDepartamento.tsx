@@ -63,7 +63,7 @@ export default function FormularioDepartamento() {
         <ArrowLeft size={20} strokeWidth={1.75} aria-hidden />
         Departamentos
       </Link>
-      <h1 className="text-2xl font-bold">{id ? 'Editar departamento' : 'Nuevo departamento'}</h1>
+      <h1 className="text-3xl font-bold">{id ? 'Editar departamento' : 'Nuevo departamento'}</h1>
 
       <form
         noValidate
@@ -71,7 +71,7 @@ export default function FormularioDepartamento() {
           setErrorGeneral(null)
           guardar.mutate(d)
         })}
-        className="flex flex-col gap-4 rounded-xl border border-borde bg-tarjeta p-5"
+        className="flex flex-col gap-4 rounded-2xl border border-borde bg-tarjeta p-5 shadow-suave"
       >
         <Campo etiqueta="Nombre" error={formState.errors.nombre?.message}>
           <input {...register('nombre')} className={estiloCampo} />
@@ -98,7 +98,7 @@ export default function FormularioDepartamento() {
         </Campo>
 
         {errorGeneral && (
-          <p className="flex items-center gap-2 rounded-lg bg-peligro/10 p-3 text-sm text-peligro" role="alert">
+          <p className="flex items-center gap-2 rounded-xl bg-peligro/10 p-3 text-sm text-peligro" role="alert">
             <CircleAlert size={20} strokeWidth={1.75} aria-hidden />
             {errorGeneral}
           </p>
@@ -121,7 +121,7 @@ export default function FormularioDepartamento() {
               <span className="text-sm">Sus empleados quedarán sin departamento. ¿Confirma?</span>
               <button
                 onClick={() => eliminar.mutate()}
-                className="min-h-12 rounded-lg bg-peligro px-4 font-semibold text-white"
+                className="min-h-12 rounded-xl bg-peligro px-4 font-semibold text-tarjeta"
               >
                 Eliminar
               </button>

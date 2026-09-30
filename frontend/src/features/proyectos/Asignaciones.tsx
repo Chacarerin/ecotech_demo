@@ -45,7 +45,7 @@ export default function Asignaciones({ proyecto }: { proyecto: Proyecto }) {
   const yaAsignados = new Set(vigentes.map((a) => a.empleado))
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-borde bg-tarjeta p-5">
+    <div className="flex flex-col gap-4 rounded-2xl border border-borde bg-tarjeta p-5 shadow-suave">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <Users size={20} strokeWidth={1.75} className="text-acento" aria-hidden />
         Personas asignadas
@@ -65,7 +65,7 @@ export default function Asignaciones({ proyecto }: { proyecto: Proyecto }) {
             {gestiona && !a.hasta && (
               <button
                 onClick={() => { setError(null); cerrar.mutate(a.id) }}
-                className="min-h-12 shrink-0 rounded-lg border border-borde px-3 text-sm hover:border-peligro hover:text-peligro"
+                className="min-h-12 shrink-0 rounded-xl border border-borde px-3 text-sm hover:border-peligro hover:text-peligro"
               >
                 Terminar hoy
               </button>
@@ -93,7 +93,7 @@ export default function Asignaciones({ proyecto }: { proyecto: Proyecto }) {
           <button
             type="submit"
             disabled={!elegido || asignar.isPending}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-lg bg-acento px-4 font-semibold text-white hover:bg-acento-hover disabled:opacity-60"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-acento px-4 font-semibold text-sobre-acento shadow-suave transition hover:bg-acento-hover hover:shadow-elevada active:scale-[0.98] disabled:opacity-60"
           >
             <UserPlus size={20} strokeWidth={1.75} aria-hidden />
             Asignar
@@ -103,7 +103,7 @@ export default function Asignaciones({ proyecto }: { proyecto: Proyecto }) {
       {!proyecto.activo && <p className="text-sm text-texto-tenue">Un proyecto desactivado no admite asignaciones nuevas.</p>}
 
       {error && (
-        <p className="flex items-center gap-2 rounded-lg bg-peligro/10 p-3 text-sm text-peligro" role="alert">
+        <p className="flex items-center gap-2 rounded-xl bg-peligro/10 p-3 text-sm text-peligro" role="alert">
           <CircleAlert size={20} strokeWidth={1.75} aria-hidden />
           {error}
         </p>

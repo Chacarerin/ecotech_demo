@@ -24,14 +24,14 @@ export default function ListaProyectos() {
   return (
     <section className="flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
-        <h1 className="flex items-center gap-2 text-2xl font-bold">
+        <h1 className="flex items-center gap-2 text-3xl font-bold">
           <FolderKanban size={24} strokeWidth={1.75} className="text-acento" aria-hidden />
           Proyectos
         </h1>
         {usuario?.rol === 'administrador' && (
           <Link
             to="/proyectos/nuevo"
-            className="flex min-h-12 items-center gap-2 rounded-lg bg-acento px-4 font-semibold text-white hover:bg-acento-hover"
+            className="flex min-h-12 items-center gap-2 rounded-xl bg-acento px-4 font-semibold text-sobre-acento shadow-suave transition hover:bg-acento-hover hover:shadow-elevada active:scale-[0.98]"
           >
             <Plus size={20} strokeWidth={1.75} aria-hidden />
             <span>Nuevo</span>
@@ -71,7 +71,7 @@ export default function ListaProyectos() {
             <li key={p.id}>
               <Link
                 to={`/proyectos/${p.id}`}
-                className="flex flex-col gap-1 rounded-xl border border-borde bg-tarjeta p-4 hover:border-acento"
+                className="flex flex-col gap-1 rounded-2xl border border-borde bg-tarjeta p-4 shadow-suave transition duration-200 hover:-translate-y-0.5 hover:border-acento/40 hover:shadow-elevada"
               >
                 <span className="flex items-start justify-between gap-2">
                   <span className="font-semibold">{p.nombre}</span>

@@ -64,8 +64,8 @@ export default function FichaProyecto() {
 /** Lo que ve el gerente: el proyecto sin poder editarlo. */
 function Resumen({ p }: { p: Proyecto }) {
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-borde bg-tarjeta p-5">
-      <h1 className="text-2xl font-bold">{p.nombre}</h1>
+    <div className="flex flex-col gap-2 rounded-2xl border border-borde bg-tarjeta p-5 shadow-suave">
+      <h1 className="text-3xl font-bold">{p.nombre}</h1>
       {p.descripcion && <p className="text-texto-secundario">{p.descripcion}</p>}
       <p className="flex items-center gap-1 text-sm text-texto-secundario">
         <MapPin size={16} strokeWidth={1.75} aria-hidden />
@@ -101,14 +101,14 @@ function FormularioProyecto({ id, actual }: { id?: number; actual?: Proyecto }) 
 
   return (
     <>
-      <h1 className="text-2xl font-bold">{id ? 'Editar proyecto' : 'Nuevo proyecto'}</h1>
+      <h1 className="text-3xl font-bold">{id ? 'Editar proyecto' : 'Nuevo proyecto'}</h1>
       <form
         noValidate
         onSubmit={handleSubmit((d) => {
           setErrorGeneral(null)
           guardar.mutate(d)
         })}
-        className="flex flex-col gap-4 rounded-xl border border-borde bg-tarjeta p-5"
+        className="flex flex-col gap-4 rounded-2xl border border-borde bg-tarjeta p-5 shadow-suave"
       >
         <Campo etiqueta="Nombre" error={err.nombre?.message}>
           <input {...register('nombre')} className={estiloCampo} />
@@ -148,7 +148,7 @@ function FormularioProyecto({ id, actual }: { id?: number; actual?: Proyecto }) 
           </label>
         )}
         {errorGeneral && (
-          <p className="flex items-center gap-2 rounded-lg bg-peligro/10 p-3 text-sm text-peligro" role="alert">
+          <p className="flex items-center gap-2 rounded-xl bg-peligro/10 p-3 text-sm text-peligro" role="alert">
             <CircleAlert size={20} strokeWidth={1.75} aria-hidden />
             {errorGeneral}
           </p>

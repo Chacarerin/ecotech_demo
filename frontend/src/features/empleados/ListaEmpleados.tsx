@@ -20,13 +20,13 @@ export default function ListaEmpleados() {
   return (
     <section className="flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
-        <h1 className="flex items-center gap-2 text-2xl font-bold">
+        <h1 className="flex items-center gap-2 text-3xl font-bold">
           <Users size={24} strokeWidth={1.75} className="text-acento" aria-hidden />
           Empleados
         </h1>
         <Link
           to="/empleados/nuevo"
-          className="flex min-h-12 items-center gap-2 rounded-lg bg-acento px-4 font-semibold text-white hover:bg-acento-hover"
+          className="flex min-h-12 items-center gap-2 rounded-xl bg-acento px-4 font-semibold text-sobre-acento shadow-suave transition hover:bg-acento-hover hover:shadow-elevada active:scale-[0.98]"
         >
           <Plus size={20} strokeWidth={1.75} aria-hidden />
           <span>Nuevo</span>
@@ -74,7 +74,7 @@ export default function ListaEmpleados() {
             <li key={e.id}>
               <Link
                 to={`/empleados/${e.id}`}
-                className="flex flex-col gap-1 rounded-xl border border-borde bg-tarjeta p-4 hover:border-acento"
+                className="flex flex-col gap-1 rounded-2xl border border-borde bg-tarjeta p-4 shadow-suave transition duration-200 hover:-translate-y-0.5 hover:border-acento/40 hover:shadow-elevada"
               >
                 <span className="font-semibold">{e.nombre}</span>
                 <span className="truncate text-sm text-texto-secundario">{e.correo}</span>

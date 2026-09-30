@@ -79,7 +79,7 @@ export default function FormularioEmpleado() {
         <ArrowLeft size={20} strokeWidth={1.75} aria-hidden />
         Empleados
       </Link>
-      <h1 className="text-2xl font-bold">{id ? 'Editar empleado' : 'Nuevo empleado'}</h1>
+      <h1 className="text-3xl font-bold">{id ? 'Editar empleado' : 'Nuevo empleado'}</h1>
       {id && <p className="font-mono text-sm text-texto-tenue">ID {id} · asignado por el sistema</p>}
 
       <form
@@ -88,7 +88,7 @@ export default function FormularioEmpleado() {
           setErrorGeneral(null)
           guardar.mutate(d)
         })}
-        className="flex flex-col gap-4 rounded-xl border border-borde bg-tarjeta p-5"
+        className="flex flex-col gap-4 rounded-2xl border border-borde bg-tarjeta p-5 shadow-suave"
       >
         <Campo etiqueta="Nombre completo" error={err.nombre?.message}>
           <input {...register('nombre')} autoComplete="off" className={estiloCampo} />
@@ -113,7 +113,7 @@ export default function FormularioEmpleado() {
           </select>
         </Campo>
 
-        <fieldset className="flex flex-col gap-4 rounded-lg border border-borde p-4">
+        <fieldset className="flex flex-col gap-4 rounded-xl border border-borde p-4">
           <legend className="flex items-center gap-1 px-1 text-sm font-semibold text-texto-secundario">
             <Lock size={16} strokeWidth={1.75} aria-hidden />
             Datos personales · se guardan cifrados
@@ -130,7 +130,7 @@ export default function FormularioEmpleado() {
         </fieldset>
 
         {errorGeneral && (
-          <p className="flex items-center gap-2 rounded-lg bg-peligro/10 p-3 text-sm text-peligro" role="alert">
+          <p className="flex items-center gap-2 rounded-xl bg-peligro/10 p-3 text-sm text-peligro" role="alert">
             <CircleAlert size={20} strokeWidth={1.75} aria-hidden />
             {errorGeneral}
           </p>
@@ -148,7 +148,7 @@ export default function FormularioEmpleado() {
           ) : (
             <>
               <span className="text-sm">Se eliminará su ficha. ¿Confirma?</span>
-              <button onClick={() => eliminar.mutate()} className="min-h-12 rounded-lg bg-peligro px-4 font-semibold text-white">
+              <button onClick={() => eliminar.mutate()} className="min-h-12 rounded-xl bg-peligro px-4 font-semibold text-tarjeta">
                 Eliminar
               </button>
               <button onClick={() => setConfirmando(false)} className="min-h-12 px-4 text-texto-secundario">
