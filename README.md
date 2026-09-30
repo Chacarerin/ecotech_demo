@@ -6,6 +6,12 @@ Aplicación web de demostración para la gestión de empleados, departamentos, p
 trabajadas de **EcoTech Solutions**, el caso de la asignatura **Programación Orientada a Objeto
 Seguro (TI3021)** de INACAP Valparaíso.
 
+| | |
+|---|---|
+| **Aplicación en línea** | <https://ecotech.antostudio.cl> |
+| **API** | <https://ecotech-api.antostudio.cl> · estado en [`/api/health/`](https://ecotech-api.antostudio.cl/api/health/) |
+| **Cuentas de demostración** | `admin`, `gerente` y `empleado`, con la clave igual al usuario. Datos ficticios, restablecidos cada noche |
+
 > **Propósito académico.** Este repositorio no es una solución de las evaluaciones: es un ejemplo
 > de **cómo se trabaja un proyecto de software de principio a fin**. Se construye a la vista, con
 > commits pequeños, documentación que evoluciona junto al código y un agente de inteligencia
