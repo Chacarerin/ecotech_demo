@@ -11,7 +11,48 @@
 ## [Sin publicar]
 
 ### Próximo
-- Hito 4 · proyectos y asignaciones. Plan en [`project_status.md`](project_status.md) §4.
+- Hito 5 · registro de horas. Plan en [`project_status.md`](project_status.md) §4.
+
+---
+
+## [0.5.0] - 2026-09-29 · Hito 4 · Proyectos y asignaciones
+
+Proyectos con ubicación y moneda, y asignaciones como tabla intermedia con vigencia entre empleado
+y proyecto. Un proyecto no se elimina: se desactiva. El gerente asigna solo a la gente de su
+departamento, y el backend lo verifica aunque la interfaz no le muestre a nadie más. 84 pruebas.
+
+### Añadido
+- `[27e86c4]` feat(proyectos): modelo de proyecto con ubicación y moneda
+- `[c448433]` feat(proyectos): asignaciones como tabla intermedia con vigencia
+- `[e0e48bf]` feat(proyectos): una asignación vigente por empleado y proyecto
+- `[2b08d77]` feat(proyectos): desactivar en vez de eliminar
+- `[e3ce630]` feat(proyectos): API de proyectos con alcance por rol
+- `[b2e75d3]` feat(proyectos): API de asignaciones, con el gerente limitado a su gente
+- `[5f2e0b7]` feat(frontend): módulo de proyectos
+- `[0acbf55]` feat(frontend): asignaciones desde la ficha del proyecto
+
+### Seguridad
+- `[a8856b4]` security(organizacion): un gerente sin departamento no ve nada
+
+### Corregido
+- `[9a3f9b7]` fix(frontend): los errores 4xx se muestran sin reintentar
+- `[d7d373a]` fix(proyectos): el gerente ve los proyectos activos
+
+### Decisiones y hallazgos
+- **Un filtro por `None` es una fuga, no un filtro vacío** (`a8856b4`). Un gerente sin
+  departamento filtraba por `departamento_id = None`; Django lo traduce a `IS NULL` y, al cruzar
+  tablas, le mostraba los registros sin departamento. Ahora el alcance del gerente pasa por una
+  sola función que devuelve una consulta vacía, y hay pruebas de regresión en los cuatro recursos.
+- **Una regla de alcance demasiado estricta también es un defecto** (`d7d373a`). La API mostraba al
+  gerente solo los proyectos donde ya trabajaba su gente, y así nunca podía asignar a la primera
+  persona. Las pruebas pasaban porque probaban lo que se había programado, no lo que decía la
+  especificación. Lo detectó el recorrido en el navegador.
+- El manejador de errores reemplazaba el mensaje específico de un `PermissionDenied` por el
+  genérico; ahora conserva el que escribe la vista (`b2e75d3`).
+- La interfaz reintentaba tres veces un 404 y quedaba en «Cargando…»: un error 4xx no se arregla
+  reintentando (`9a3f9b7`).
+- Cerrar una asignación con fecha de hoy la deja vigente hasta el fin del día: la persona trabajó
+  ese día y debe poder registrar sus horas.
 
 ---
 

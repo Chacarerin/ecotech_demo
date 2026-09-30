@@ -8,9 +8,9 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 4 · Proyectos y asignaciones |
-| **Progreso general** | 42 % |
-| **Próximo hito** | Hito 4 · Proyectos y asignaciones |
+| **Fase actual** | Hito 5 · Registro de horas |
+| **Progreso general** | 53 % |
+| **Próximo hito** | Hito 5 · Registro de horas |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
 ---
@@ -23,8 +23,8 @@
 | 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | ✅ | 2026-09-28 |
 | 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ✅ | 2026-09-28 |
 | 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ✅ | 2026-09-29 |
-| 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | 🔜 | |
-| 5 | **Registro de horas**, con sus reglas | RF-08 | ⏳ | |
+| 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ✅ | 2026-09-29 |
+| 5 | **Registro de horas**, con sus reglas | RF-08 | 🔜 | |
 | 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
 | 7 | **Integraciones**: clima y tipo de cambio | RF-11 · RF-12 | ⏳ | |
 | 8 | **Deploy** en el VPS con CI | — | ⏳ | |
@@ -49,20 +49,23 @@
 
 ---
 
-## 4. Próximos pasos · Hito 4 · Proyectos y asignaciones
+## 4. Próximos pasos · Hito 5 · Registro de horas
+
+El registro de tiempo es la **composición** del caso: sin proyecto no hay registro, y un proyecto
+con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
 
 | # | Tarea | Commit esperado |
 |---|-------|-----------------|
-| 1 | Modelo `Proyecto`: nombre, descripción, fecha de inicio, ciudad, país, coordenadas, moneda, activo | `feat(proyectos): modelo de proyecto` |
-| 2 | Modelo `Asignacion` como tabla intermedia empleado ↔ proyecto, con vigencia | `feat(proyectos): asignaciones con vigencia` |
-| 3 | Regla: sin dos asignaciones vigentes del mismo empleado al mismo proyecto | `feat(proyectos): una asignación vigente por empleado y proyecto` |
-| 4 | Un proyecto no se elimina: se desactiva (`PROTECT` cuando tenga horas) | `feat(proyectos): desactivar en vez de eliminar` |
-| 5 | API de proyectos: administración todo; gerente los activos y los de su gente; empleado los suyos | `feat(proyectos): API de proyectos con alcance por rol` |
-| 6 | API de asignaciones: asignar y cerrar | `feat(proyectos): API de asignaciones` |
-| 7 | Interfaz: listado y ficha del proyecto | `feat(frontend): módulo de proyectos` |
-| 8 | Interfaz: asignar y desasignar empleados desde la ficha | `feat(frontend): asignaciones desde la ficha del proyecto` |
+| 1 | Modelo `RegistroTiempo`: empleado, proyecto, fecha, horas, descripción y autor, con `PROTECT` hacia el proyecto | `feat(registros): modelo de registro de tiempo` |
+| 2 | Reglas: horas de 0,5 a 12 en pasos de 0,5, y fecha no futura | `feat(registros): horas en pasos de media hora y sin fechas futuras` |
+| 3 | Regla: solo con asignación vigente en el proyecto en esa fecha | `feat(registros): horas solo dentro de una asignación vigente` |
+| 4 | Regla: máximo 12 horas por empleado y día, sumando todos sus registros | `feat(registros): tope de 12 horas diarias` |
+| 5 | API: el empleado crea y edita los suyos hasta 7 días atrás; el gerente ve su departamento; administración, todo | `feat(registros): API de horas con alcance por rol` |
+| 6 | Interfaz: el empleado registra sus horas en los proyectos a los que está asignado | `feat(frontend): registro de horas del empleado` |
+| 7 | Interfaz: el gerente revisa las horas de su departamento, con filtro por fechas | `feat(frontend): revisión de horas del departamento` |
 
----
+**Criterio aprendido en el hito 4:** cada permiso se prueba contra la tabla de
+[`project_spec.md`](project_spec.md) §4.2, no contra lo que se programó.
 
 ## 5. Riesgos
 
@@ -103,6 +106,11 @@
 
 ## 8. Notas de sesión
 
+### 2026-09-29 · hito 4
+- Backend: proyectos con ubicación y moneda, asignaciones con vigencia como tabla intermedia, desactivar en vez de eliminar, APIs con alcance por rol. 84 pruebas.
+- Interfaz: listado y ficha de proyectos; asignar y cerrar asignaciones desde la ficha.
+- Un hallazgo de seguridad (gerente sin departamento) y dos defectos corregidos con su propio commit: los reintentos ante un 4xx y el alcance del gerente más estrecho que la especificación.
+
 ### 2026-09-29 · hito 3
 - Backend: modelos base abstractos, campo cifrado con Fernet, validadores, departamentos y empleados con sus reglas, APIs con alcance por rol. 58 pruebas.
 - Interfaz: módulos de departamentos y empleados, con validación, búsqueda y errores de la API junto a cada campo.
@@ -134,4 +142,4 @@
 
 ---
 
-*Última actualización: 2026-09-28*
+*Última actualización: 2026-09-29*
