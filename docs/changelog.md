@@ -15,6 +15,35 @@
 
 ---
 
+## [0.7.0] - 2026-09-30 · Identidad visual y tema oscuro
+
+La interfaz deja de verse como una plantilla: paleta propia en dos temas, tipografías con carácter,
+un panel de entrada por rol y la hoja de ruta a la vista. La API responde solo JSON en producción.
+
+### Añadido
+- `[f57d246]` feat(frontend): identidad visual propia y tema oscuro
+- `[5672e8e]` feat(frontend): panel de entrada por rol con hoja de ruta
+- `[eb8053b]` feat(frontend): ingreso en dos columnas y cuentas de demo compactas
+
+### Cambiado
+- `[6fdeea3]` feat(auth): diez intentos de inicio de sesión por minuto
+- `[b29e57e]` feat(config): la API responde solo JSON en producción
+
+### Decisiones y hallazgos
+- **La interfaz navegable de DRF no va a producción.** Es la página «de Django» que aparecía al
+  abrir la API en el navegador. En desarrollo ayuda a aprender; en producción expone rutas y
+  formularios a cualquiera, y ningún cliente real la usa. Un servicio real responde JSON, y en su
+  raíz, a lo sumo, su nombre y dónde consultar su estado.
+- **Un límite por IP choca con un laboratorio**, que sale a internet con una sola dirección. Se
+  subió de 5 a 10 intentos por minuto.
+- **Nunca `text-white` sobre el acento:** en el tema oscuro el acento es claro. Se creó
+  `sobre-acento`, y se reemplazó en todos los botones.
+- **El tema se aplica desde un archivo, no desde un script en línea:** la CSP del sitio los
+  bloquea, y es correcto que lo haga.
+- La hoja de ruta del panel se mantiene a mano: la regla quedó en `CLAUDE.md` §7.
+
+---
+
 ## [0.6.1] - 2026-09-30 · Cuentas de demostración
 
 Una cuenta pública por rol en la pantalla de ingreso, con lo que cada uno puede hacer, para que

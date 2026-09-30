@@ -203,50 +203,63 @@ un servidor que aloja sitios de terceros.
 
 ## 7. Diseño
 
-Estética limpia de producto de gestión, asociada a sostenibilidad sin caer en lo decorativo.
+Estética de producto de gestión con identidad propia: papel cálido, verde bosque y un ámbar de sol,
+con las curvas de nivel de una carta topográfica como sello. Se evita el aspecto genérico de
+plantilla —Inter, verde azulado y tarjetas planas—, que fue la objeción del docente el 2026-09-30.
 
 | Regla | Descripción |
 |-------|-------------|
-| **Tema claro por defecto** | Herramienta de oficina y de terreno; se lee a pleno sol. Tema oscuro opcional |
+| **Tema claro por defecto, oscuro a elección** | Se lee a pleno sol. El oscuro se elige con el botón de tema y se recuerda en el navegador |
 | **Datos antes que adornos** | Tablas legibles, cifras alineadas a la derecha, fechas en formato `dd-mm-aaaa` |
 | **Estados siempre visibles** | Carga, vacío y error en cada vista que consulta la API |
+| **Lo pendiente se ve** | Un módulo que no está lleva su hito (`H5`) en la navegación y una página que explica qué hará. La hoja de ruta del panel dice qué falta |
+| **Todo lo que se toca responde** | Tarjetas que se elevan, iconos que se desplazan, botones que se hunden al presionarlos. Siempre con `transition` |
 | **Acción primaria al alcance del pulgar** | En móvil, «Registrar horas» fija en la parte inferior |
-| **Accesibilidad** | Contraste AA, foco visible, etiquetas en todos los campos |
-| **Solo Tailwind** | Estilos con clases utilitarias de Tailwind. Nada de CSS suelto por componente ni estilos en línea; lo repetido se extrae a un componente, no a una clase CSS |
+| **Accesibilidad** | Contraste AA en los dos temas, foco visible, etiquetas en todos los campos |
+| **Solo Tailwind** | Estilos con clases utilitarias. Nada de CSS suelto por componente. Único estilo en línea admitido: un valor que sale de un dato, como el ancho de una barra de avance |
 | **Iconos de Lucide, con significado** | Un icono ayuda a distinguir, no decora. Siempre acompañado de texto, salvo en botones de solo icono, que llevan `aria-label` |
 
-### Paleta · tokens de Tailwind 4
+### Paleta · tokens de Tailwind 4, en dos temas
 
-Tailwind 4 se configura en CSS, no en `tailwind.config.js`. Los tokens viven en
-`frontend/src/index.css` y generan clases como `bg-fondo`, `text-acento` o `border-borde`:
+Tailwind 4 se configura en CSS. En `frontend/src/index.css` cada color se define dos veces —en
+`:root` para el tema claro y en `.dark` para el oscuro— y `@theme inline` lo expone como clase:
+`bg-fondo`, `text-acento`, `border-borde`, y con opacidad, `bg-acento/10`.
 
-```css
-@import "tailwindcss";
+| Token | Claro | Oscuro | Para qué |
+|-------|-------|--------|----------|
+| `fondo` | `#F5F4EE` | `#0C1310` | Fondo de página: papel cálido, no blanco de pantalla |
+| `tarjeta` | `#FFFFFF` | `#131C18` | Tarjetas, campos, barra lateral |
+| `superficie` | `#EDECE4` | `#1A2621` | Hover, chips, fondos de apoyo |
+| `acento` | `#0F5F4B` | `#5CC4A2` | Acción principal, elemento activo |
+| `sobre-acento` | `#FFFFFF` | `#06201A` | Texto sobre un botón de acento |
+| `portada` · `sobre-portada` | `#0F5F4B` · blanco | `#12382E` · `#E7ECE9` | Bloques de marca: bienvenida y presentación del ingreso |
+| `sol` | `#A1560B` | `#EFB25A` | Lo destacado y lo pendiente: hitos, «en curso» |
+| `positivo` | `#65A30D` | `#84CC16` | Solo iconos y puntos de estado |
+| `peligro` | `#B91C1C` | `#F58A8A` | Errores y acciones destructivas |
+| `texto` · `texto-secundario` · `texto-tenue` | `#18211D` · `#46524C` · `#66706A` | `#E7ECE9` · `#B0BBB5` · `#87938D` | Tres niveles de texto |
+| `borde` | `#E2E0D6` | `#25332D` | Bordes |
 
-@theme {
-  --color-fondo: #F7F9F8;
-  --color-tarjeta: #FFFFFF;
-  --color-acento: #0F766E;          /* verde azulado: acción principal */
-  --color-acento-hover: #115E59;
-  --color-positivo: #65A30D;        /* verde lima: estados positivos */
-  --color-peligro: #B91C1C;
-  --color-texto: #1F2937;
-  --color-texto-secundario: #4B5563;
-  --color-texto-tenue: #6B7280;
-  --color-borde: #E5E7EB;
+Sombras: `shadow-suave` en reposo y `shadow-elevada` al pasar el cursor.
 
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
-```
-
-> Un color que no esté en `@theme` no se usa. Si hace falta uno nuevo, se agrega aquí primero,
-> con su propósito comentado.
+> Un color que no esté en `index.css` no se usa. Si hace falta uno nuevo, se agrega con sus dos
+> valores y su propósito comentado.
 
 > [!CAUTION]
-> **`positivo` (#65A30D) no se usa para texto:** sobre el fondo da 2,9:1 y no alcanza el
-> contraste AA de 4,5:1. Va en iconos, bordes y fondos; el texto de un estado positivo usa
-> `texto` o `acento` (5,2:1). Se detectó en una captura del hito 2, no en una prueba.
+> **`positivo` no se usa para texto:** sobre el fondo claro da 2,9:1 y no alcanza el contraste AA
+> de 4,5:1. Va en iconos, bordes y puntos de estado. Se detectó en una captura del hito 2.
+
+> [!CAUTION]
+> **Nunca `text-white` sobre un color de acento.** En el tema oscuro el acento es claro y el
+> blanco deja de leerse: se usa `text-sobre-acento`. Sobre `bg-peligro`, `text-tarjeta`.
+
+**El tema se aplica antes de pintar** con `public/tema.js`, que lee la preferencia guardada y pone
+`.dark` en `<html>`. Es un archivo y no un script en línea porque la CSP del sitio no los admite.
+Todos los botones de tema leen la clase de `<html>` (`lib/tema.ts`): dos botones en pantalla nunca
+se contradicen.
+
+**La hoja de ruta del panel** vive en `frontend/src/lib/hojaDeRuta.ts` y se actualiza a mano al
+cerrar cada hito, en el mismo commit que `docs/project_status.md`. También se actualiza la línea de
+lo que puede hacer cada rol en `components/CuentasDemo.tsx`.
 
 ### Iconografía · Lucide
 
@@ -275,7 +288,8 @@ Tailwind 4 se configura en CSS, no en `tailwind.config.js`. Los tokens viven en
 
 | Uso | Fuente | Peso |
 |-----|--------|------|
-| Títulos y texto | Inter | 400 · 600 · 700 |
+| Títulos | Bricolage Grotesque (`font-display`) | 700 |
+| Texto | Instrument Sans | 400 · 500 · 600 |
 | Cifras e identificadores | JetBrains Mono | 500 |
 
 ---
