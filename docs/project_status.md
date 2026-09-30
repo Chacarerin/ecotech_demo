@@ -8,9 +8,9 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 3 · Organización |
-| **Progreso general** | 30 % |
-| **Próximo hito** | Hito 3 · Departamentos y empleados con datos cifrados |
+| **Fase actual** | Hito 4 · Proyectos y asignaciones |
+| **Progreso general** | 42 % |
+| **Próximo hito** | Hito 4 · Proyectos y asignaciones |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
 ---
@@ -22,8 +22,8 @@
 | 0 | **Documentación inicial**: visión, especificación, arquitectura, reglas del agente, seguridad de publicación | — | ✅ | 2026-09-28 |
 | 1 | **Esqueleto**: Django con settings modulares y PostgreSQL, `/api/health/`, Vite + React + TS, CI de pruebas | — | ✅ | 2026-09-28 |
 | 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ✅ | 2026-09-28 |
-| 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | 🔜 | |
-| 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ⏳ | |
+| 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ✅ | 2026-09-29 |
+| 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | 🔜 | |
 | 5 | **Registro de horas**, con sus reglas | RF-08 | ⏳ | |
 | 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
 | 7 | **Integraciones**: clima y tipo de cambio | RF-11 · RF-12 | ⏳ | |
@@ -49,20 +49,18 @@
 
 ---
 
-## 4. Próximos pasos · Hito 3 · Organización
+## 4. Próximos pasos · Hito 4 · Proyectos y asignaciones
 
 | # | Tarea | Commit esperado |
 |---|-------|-----------------|
-| 1 | Modelos base abstractos `ModeloAuditable` y `Persona` en `nucleo` | `feat(nucleo): modelos base abstractos` |
-| 2 | `CampoCifrado` con Fernet y la variable `FIELD_ENCRYPTION_KEY` obligatoria | `security(nucleo): campo cifrado para datos personales` |
-| 3 | Validadores: teléfono chileno y fecha no futura | `feat(nucleo): validadores de teléfono y fecha` |
-| 4 | Modelos `Departamento` y `Empleado`, con dirección, teléfono y salario cifrados | `feat(organizacion): departamentos y empleados` |
-| 5 | Reglas: correo y nombre únicos, gerente del propio departamento | `feat(organizacion): reglas de negocio del caso` |
-| 6 | API de departamentos: CRUD solo para administración | `feat(organizacion): API de departamentos` |
-| 7 | API de empleados con búsqueda; datos personales solo para administración | `feat(organizacion): API de empleados` |
-| 8 | Pruebas: cifrado en la base, permisos por rol y reglas | `test(organizacion): cifrado, permisos y reglas` |
-| 9 | Interfaz de departamentos: listado, alta y edición | `feat(frontend): módulo de departamentos` |
-| 10 | Interfaz de empleados: listado con búsqueda, alta y edición | `feat(frontend): módulo de empleados` |
+| 1 | Modelo `Proyecto`: nombre, descripción, fecha de inicio, ciudad, país, coordenadas, moneda, activo | `feat(proyectos): modelo de proyecto` |
+| 2 | Modelo `Asignacion` como tabla intermedia empleado ↔ proyecto, con vigencia | `feat(proyectos): asignaciones con vigencia` |
+| 3 | Regla: sin dos asignaciones vigentes del mismo empleado al mismo proyecto | `feat(proyectos): una asignación vigente por empleado y proyecto` |
+| 4 | Un proyecto no se elimina: se desactiva (`PROTECT` cuando tenga horas) | `feat(proyectos): desactivar en vez de eliminar` |
+| 5 | API de proyectos: administración todo; gerente los de su gente; empleado los suyos | `feat(proyectos): API de proyectos con alcance por rol` |
+| 6 | API de asignaciones: asignar y cerrar | `feat(proyectos): API de asignaciones` |
+| 7 | Interfaz: listado y ficha del proyecto | `feat(frontend): módulo de proyectos` |
+| 8 | Interfaz: asignar y desasignar empleados desde la ficha | `feat(frontend): asignaciones desde la ficha del proyecto` |
 
 ---
 
@@ -104,6 +102,12 @@
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-29 · hito 3
+- Backend: modelos base abstractos, campo cifrado con Fernet, validadores, departamentos y empleados con sus reglas, APIs con alcance por rol. 58 pruebas.
+- Interfaz: módulos de departamentos y empleados, con validación, búsqueda y errores de la API junto a cada campo.
+- Verificado en navegador y en PostgreSQL: lo que se guarda desde el formulario queda cifrado.
+- Dos defectos hallados y corregidos con su propio commit: el salario tratado como texto y el `select` que perdía su valor.
 
 ### 2026-09-28 · hito 2
 - Backend: rol en el usuario, inicio de sesión con JWT, renovación rotativa en cookie HttpOnly, cierre de sesión que invalida la renovación, `/api/auth/yo/`, límite de cinco intentos por minuto y permisos por rol. 25 pruebas.

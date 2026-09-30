@@ -396,6 +396,7 @@ WebSockets, contenedores— el agente **no improvisa**: lo plantea y espera la d
 | Timeouts y manejo de fallas en toda llamada externa | Que una API caída tumbe una vista |
 | PostgreSQL en todos los entornos | SQLite «solo para probar» |
 | `CORS_ALLOWED_ORIGINS` con la lista exacta | `*` en producción |
+| Declarar en el serializador el tipo de un `CampoCifrado` que no es texto | Dejar que DRF lo infiera: lo trata como texto, porque hereda de `TextField` |
 
 ### Frontend
 
@@ -406,6 +407,7 @@ WebSockets, contenedores— el agente **no improvisa**: lo plantea y espera la d
 | Estados de carga, vacío y error siempre | Pantallas que quedan en blanco |
 | Token de acceso en memoria | Tokens en `localStorage` |
 | Lógica de datos en hooks con TanStack Query | `fetch` repetido en cada componente |
+| En un formulario de edición, cargar los valores cuando llegaron **todas** sus listas | `reset()` antes de que el `select` tenga sus opciones: queda vacío y guardar borra el dato |
 
 ---
 

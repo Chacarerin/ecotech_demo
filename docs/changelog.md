@@ -11,8 +11,40 @@
 ## [Sin publicar]
 
 ### Próximo
-- Hito 3 · organización: departamentos y empleados con datos cifrados. Plan en
-  [`project_status.md`](project_status.md) §4.
+- Hito 4 · proyectos y asignaciones. Plan en [`project_status.md`](project_status.md) §4.
+
+---
+
+## [0.4.0] - 2026-09-29 · Hito 3 · Organización
+
+Departamentos y empleados, con dirección, teléfono y salario cifrados en la base. Aquí aparecen
+juntos los conceptos de la asignatura: herencia en los modelos base, encapsulamiento en el campo
+cifrado y asociaciones entre empleado, departamento y gerente. 58 pruebas del backend.
+
+### Añadido
+- `[7a7be86]` feat(nucleo): modelos base abstractos ModeloAuditable y Persona
+- `[1e58f10]` feat(nucleo): validadores de teléfono chileno y fecha no futura
+- `[6074d2c]` feat(organizacion): departamentos y empleados con datos cifrados
+- `[04e3072]` feat(organizacion): reglas de negocio del caso validadas al guardar
+- `[aa6f83f]` feat(organizacion): API de departamentos con alcance por rol
+- `[ce52e9c]` feat(organizacion): API de empleados con datos personales por rol
+- `[1d67b37]` feat(frontend): módulo de departamentos
+- `[775e644]` feat(frontend): módulo de empleados
+
+### Seguridad
+- `[383457f]` security(nucleo): campo cifrado para los datos personales
+
+### Corregido
+- `[134a27b]` fix(frontend): el select no pierde su valor si la lista llega tarde
+
+### Decisiones y hallazgos
+- `ModeloAuditable` valida al guardar: la API REST no aplica las reglas del modelo por su cuenta.
+- El plan tenía un commit solo de pruebas; cada regla y cada permiso se probó en el commit que lo
+  introdujo.
+- Una prueba detectó que DRF trataba el salario cifrado como texto y respondía 500 (`ce52e9c`).
+- Una captura detectó que editar un empleado podía sacarlo de su departamento (`134a27b`). Ninguna
+  prueba lo habría visto: dependía del orden en que llegan las respuestas.
+- Los dos hallazgos quedaron como reglas en `CLAUDE.md`.
 
 ---
 
