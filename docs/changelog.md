@@ -15,6 +15,34 @@
 
 ---
 
+## [0.6.0] - 2026-09-30 · Hito 8, adelantado · En línea
+
+La aplicación se publica antes de completar los hitos 5 a 7, por decisión del docente: se muestra
+ya y se sigue mejorando en línea. Desde ahora cada push a `main` con la CI en verde llega solo al
+servidor. 85 pruebas del backend.
+
+### Añadido
+- `[0851f03]` feat(nucleo): datos ficticios del caso para demostración
+- `deploy.yml`: deploy automático tras la CI en verde, con una clave que solo puede ejecutar el
+  script de deploy
+
+### Corregido
+- `[4414a04]` fix(proyectos): pruebas sin fechas fijas que caducan
+
+### Decisiones y hallazgos
+- **Una prueba con una fecha escrita a mano es una prueba con fecha de vencimiento.** Dos pruebas
+  cerraban una asignación el 29-09-2026; al día siguiente la regla del modelo las rechazó, con
+  razón. Las fechas relativas a «hoy» se calculan, no se escriben.
+- **La configuración del servidor también se revisa antes de usarla.** La política de seguridad de
+  contenido de la interfaz solo permitía conexiones al propio dominio, y la API vive en otro: el
+  inicio de sesión habría fallado en producción. Además, en Nginx un `add_header` dentro de un
+  `location` anula los del bloque superior, y `index.html` quedaba sin cabeceras de seguridad.
+  Ninguna prueba automática lo habría detectado: se encontró leyendo la configuración.
+- Lo que requiere privilegios en el servidor se reunió en un solo script que ejecuta el docente;
+  el agente trabaja con una cuenta sin privilegios.
+
+---
+
 ## [0.5.0] - 2026-09-29 · Hito 4 · Proyectos y asignaciones
 
 Proyectos con ubicación y moneda, y asignaciones como tabla intermedia con vigencia entre empleado

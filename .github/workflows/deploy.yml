@@ -1,0 +1,57 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Deploy · ecotech_demo
+#
+# Solo se ejecuta cuando la CI terminó en verde sobre main: nada que no pasó
+# las pruebas llega al servidor.
+#
+# La dirección, el usuario y la clave del servidor son secretos del
+# repositorio (VPS_HOST, VPS_USER, VPS_SSH_KEY): este archivo es público y no
+# los contiene. En el servidor, la clave tiene un comando forzado: lo único que
+# puede hacer es ejecutar el script de deploy, aunque alguien la obtuviera.
+# ─────────────────────────────────────────────────────────────────────────
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:          # deploy manual desde la pestaña Actions
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false   # un deploy a medias es peor que uno en cola
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Mientras el servidor no esté dado de alta no hay secretos: se omite sin marcar error
+      - name: Comprobar que el servidor está configurado
+        id: config
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          if [ -n "$VPS_HOST" ]; then echo "listo=true" >> "$GITHUB_OUTPUT"
+          else echo "::notice::Sin secretos del servidor todavía: se omite el deploy."; fi
+
+      - name: Ejecutar el deploy en el servidor
+        if: steps.config.outputs.listo == 'true'
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/deploy "$VPS_USER@$VPS_HOST"
+
+      - name: Verificar la API y la interfaz
+        if: steps.config.outputs.listo == 'true'
+        run: |
+          sleep 5
+          curl -fsS https://ecotech-api.antostudio.cl/api/health/
+          curl -fsSI https://ecotech.antostudio.cl/ | head -1

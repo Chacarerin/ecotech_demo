@@ -8,8 +8,8 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 5 · Registro de horas |
-| **Progreso general** | 53 % |
+| **Fase actual** | Hito 5 · Registro de horas, con la aplicación en línea |
+| **Progreso general** | 64 % |
 | **Próximo hito** | Hito 5 · Registro de horas |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
@@ -27,7 +27,7 @@
 | 5 | **Registro de horas**, con sus reglas | RF-08 | 🔜 | |
 | 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
 | 7 | **Integraciones**: clima y tipo de cambio | RF-11 · RF-12 | ⏳ | |
-| 8 | **Deploy** en el VPS con CI | — | ⏳ | |
+| 8 | **Deploy** en el VPS con CI · adelantado a los hitos 5 a 7 | — | ✅ | 2026-09-30 |
 | 9 | **Publicación** del repositorio | — | ✅ | 2026-09-28 |
 
 **Leyenda:** ✅ completado · 🔄 en progreso · 🔜 próximo · ⏳ pendiente · ❌ bloqueado
@@ -82,6 +82,7 @@ con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
 
 | Decisión | Razón |
 |----------|-------|
+| Deploy adelantado a los hitos 5 a 7 | Decidido por el docente el 2026-09-30: mostrar la aplicación en línea y seguir mejorándola; cada hito llega al servidor con su push |
 | Nombre técnico `ecotech_demo` | Coincide con la empresa del caso. Decidido por el docente el 2026-09-28 |
 | Stack C · desacoplado | La asignatura trabaja el consumo de APIs; una API propia lo muestra desde el otro lado |
 | `CLAUDE.md` y `docs/` versionados | Son el material que se quiere mostrar |
@@ -105,6 +106,12 @@ con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-30 · hito 8, adelantado
+- La aplicación quedó en línea en `ecotech.antostudio.cl`, con la API en `ecotech-api.antostudio.cl`, certificados TLS y datos ficticios del caso.
+- Deploy automático: cada push a `main` con la CI en verde llega al servidor.
+- Tres defectos detectados antes de que llegaran a producción: la política de seguridad de la interfaz bloqueaba la API; las cabeceras de seguridad no se aplicaban a `index.html`; dos pruebas tenían una fecha fija que caducó.
+- Pendiente menor: HSTS en el sitio de la interfaz (la API ya lo envía desde Django).
 
 ### 2026-09-29 · hito 4
 - Backend: proyectos con ubicación y moneda, asignaciones con vigencia como tabla intermedia, desactivar en vez de eliminar, APIs con alcance por rol. 84 pruebas.
@@ -142,4 +149,4 @@ con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
 
 ---
 
-*Última actualización: 2026-09-29*
+*Última actualización: 2026-09-30*

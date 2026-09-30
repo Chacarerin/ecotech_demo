@@ -6,7 +6,7 @@
 #
 # No usa ningún secreto. Los valores de entorno de abajo son desechables:
 # solo existen dentro de la máquina temporal de GitHub y nombran su propósito.
-# El deploy tendrá su propio workflow en el hito 8.
+# El deploy está en deploy.yml y corre solo si esta CI termina en verde.
 # ─────────────────────────────────────────────────────────────────────────
 name: CI
 

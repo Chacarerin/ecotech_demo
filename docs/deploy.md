@@ -96,13 +96,20 @@ Se hace una sola vez y la ejecuta el docente, porque requiere privilegios en el 
    proyecto del servidor.
 2. Base de datos y usuario propios del proyecto, con permisos solo sobre esa base.
 3. Clave de despliegue de solo lectura para que el servidor pueda clonar el repositorio.
-4. Entorno virtual con Python 3.11, dependencias, archivo `.env`, migraciones y estáticos.
+4. Entorno virtual con Python 3.11, dependencias, archivo `.env`, migraciones y estáticos. Para
+   mostrar la aplicación con contenido, `python manage.py cargar_demo` carga departamentos,
+   empleados y proyectos ficticios; se puede repetir sin duplicar nada.
 5. Unidad systemd de gunicorn.
 6. Configuración de Nginx para los dos subdominios, solo con HTTP; el certificado lo agrega
    Certbot después.
 7. Certificados TLS.
 8. Script de deploy y clave restringida de la CI.
 9. Primer deploy y verificación.
+
+Todo lo que requiere privilegios se reunió en un solo script, que el docente ejecuta una vez; el
+resto lo hace la cuenta de despliegue, sin privilegios. Desde ahí, cada push a `main` despliega
+solo: [`deploy.yml`](../.github/workflows/deploy.yml) espera a que la CI termine en verde y recién
+entonces se conecta al servidor. Si los secretos no existen, el workflow se omite con un aviso.
 
 ---
 
