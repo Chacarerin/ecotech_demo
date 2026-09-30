@@ -21,3 +21,16 @@ def health(request):
         base = "error"
     estado = "ok" if base == "ok" else "degradado"
     return Response({"estado": estado, "base": base}, status=200 if base == "ok" else 503)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def raiz(request):
+    """Portada de la API. Sin ella, quien abre el dominio en el navegador ve «Not Found» y cree
+    que el servicio está caído: la API responde bajo /api/, no en la raíz."""
+    return Response({
+        "servicio": "API de EcoTech Solutions · demostración académica",
+        "interfaz": "https://ecotech.antostudio.cl",
+        "estado": "/api/health/",
+        "codigo": "https://github.com/Chacarerin/ecotech_demo",
+    })

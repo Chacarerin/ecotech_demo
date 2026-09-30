@@ -22,3 +22,9 @@ def test_health_responde_503_si_la_base_falla_sin_revelar_el_error(monkeypatch):
     assert respuesta.status_code == 503
     assert respuesta.json() == {"estado": "degradado", "base": "error"}
     assert "detalle interno" not in respuesta.content.decode()
+
+
+@pytest.mark.django_db
+def test_la_raiz_orienta_en_vez_de_responder_404(client):
+    r = client.get("/")
+    assert r.status_code == 200 and r.json()["estado"] == "/api/health/"
