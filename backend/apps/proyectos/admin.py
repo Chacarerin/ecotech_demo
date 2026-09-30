@@ -9,6 +9,9 @@ class ProyectoAdmin(admin.ModelAdmin):
     list_filter = ("activo", "moneda")
     search_fields = ("nombre", "ciudad")
 
+    def has_delete_permission(self, request, obj=None):
+        return False      # se desactiva con la casilla «activo»; ver Proyecto.delete
+
 
 @admin.register(Asignacion)
 class AsignacionAdmin(admin.ModelAdmin):

@@ -39,6 +39,11 @@ class Proyecto(ModeloAuditable):
     def __str__(self) -> str:
         return self.nombre
 
+    def delete(self, *args, **kwargs):
+        # Un proyecto guarda el trabajo de varias personas en el tiempo: borrarlo destruiría
+        # la trazabilidad que el caso exige. Se desactiva.
+        raise ValidationError("Un proyecto no se elimina: se desactiva.")
+
 
 class Asignacion(ModeloAuditable):
     """Empleado ↔ Proyecto, con vigencia.

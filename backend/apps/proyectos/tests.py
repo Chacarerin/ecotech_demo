@@ -88,3 +88,19 @@ class TestReglasDeAsignacion:
         solar.save()
         a.hasta = date(2026, 9, 29)
         a.save()                                                         # cerrar sí se permite
+
+
+@pytest.mark.django_db
+def test_un_proyecto_no_se_elimina_se_desactiva():
+    p = proyecto()
+    with pytest.raises(ValidationError, match="se desactiva"):
+        p.delete()
+    assert Proyecto.objects.filter(pk=p.pk).exists()
+
+
+@pytest.mark.django_db
+def test_un_empleado_con_asignaciones_no_se_puede_eliminar(marta):
+    from django.db.models import ProtectedError
+    Asignacion.objects.create(empleado=marta, proyecto=proyecto())
+    with pytest.raises(ProtectedError):
+        marta.delete()
