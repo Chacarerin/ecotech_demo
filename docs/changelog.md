@@ -23,11 +23,12 @@ servidor. 85 pruebas del backend.
 
 ### Añadido
 - `[0851f03]` feat(nucleo): datos ficticios del caso para demostración
-- `deploy.yml`: deploy automático tras la CI en verde, con una clave que solo puede ejecutar el
+- `[07f0e71]` `deploy.yml`: deploy automático tras la CI en verde, con una clave que solo puede ejecutar el
   script de deploy
 
 ### Corregido
 - `[4414a04]` fix(proyectos): pruebas sin fechas fijas que caducan
+- `[95e7d97]` fix(deploy): una sola conexión SSH desde la Action
 
 ### Decisiones y hallazgos
 - **Una prueba con una fecha escrita a mano es una prueba con fecha de vencimiento.** Dos pruebas
@@ -38,6 +39,9 @@ servidor. 85 pruebas del backend.
   inicio de sesión habría fallado en producción. Además, en Nginx un `add_header` dentro de un
   `location` anula los del bloque superior, y `index.html` quedaba sin cabeceras de seguridad.
   Ninguna prueba automática lo habría detectado: se encontró leyendo la configuración.
+- El primer deploy automático falló con «Connection reset»: el servidor limita las conexiones SSH
+  seguidas y `ssh-keyscan` abre varias antes de la real. Se adoptó la acción que ya usan los demás
+  proyectos del mismo servidor, con una sola conexión (`95e7d97`).
 - Lo que requiere privilegios en el servidor se reunió en un solo script que ejecuta el docente;
   el agente trabaja con una cuenta sin privilegios.
 
