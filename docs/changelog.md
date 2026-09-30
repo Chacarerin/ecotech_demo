@@ -15,6 +15,24 @@
 
 ---
 
+## [0.6.1] - 2026-09-30 · Cuentas de demostración
+
+Una cuenta pública por rol en la pantalla de ingreso, con lo que cada uno puede hacer, para que
+cualquiera compare los tres recorridos. 89 pruebas del backend.
+
+### Añadido
+- `[32aa282]` feat(nucleo): portada de la API en la raíz del dominio
+- `[03b9753]` feat(nucleo): cuentas de demostración por rol y restablecimiento
+- `[bae4309]` feat(frontend): cuentas de demostración en la pantalla de ingreso
+
+### Decisiones y hallazgos
+- **Publicar una credencial a propósito exige decir por qué y con qué resguardos.** Las cuentas
+  no entran al panel de Django, los datos y las claves se reponen cada noche, y solo existen donde
+  se activan con una variable. La excepción quedó escrita en `variables_entorno.md`.
+- La raíz de la API respondía 404 y parecía una caída: ahora orienta hacia `/api/health/`.
+
+---
+
 ## [0.6.0] - 2026-09-30 · Hito 8, adelantado · En línea
 
 La aplicación se publica antes de completar los hitos 5 a 7, por decisión del docente: se muestra
