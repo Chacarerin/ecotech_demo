@@ -39,7 +39,7 @@
 ```
 backend/apps/
 ├── nucleo/            infraestructura común, sin lógica de negocio
-│   ├── modelos.py         ModeloAuditable, Persona (abstractos)
+│   ├── models.py          ModeloAuditable, Persona (abstractos)
 │   ├── campos.py          CampoCifrado (encapsula Fernet)
 │   ├── validadores.py     telefono_chileno, fecha_no_futura
 │   ├── excepciones.py     manejador de errores de la API
