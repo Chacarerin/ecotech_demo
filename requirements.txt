@@ -1,0 +1,11 @@
+# Dependencias de Python de EcoTech Solutions.
+#
+# El backend vive en backend/, y ahí están las versiones fijadas. Este archivo existe para que
+# se encuentren desde la raíz del repositorio: pip resuelve la ruta de abajo relativa a este
+# archivo, de modo que funciona igual desde la raíz que desde backend/.
+#
+#   pip install -r requirements.txt                   # producción
+#   pip install -r backend/requirements-dev.txt       # desarrollo: agrega las pruebas
+#
+# El detalle de cada dependencia y por qué está: docs/stack.md
+-r backend/requirements.txt
