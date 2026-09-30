@@ -15,6 +15,25 @@
 
 ---
 
+## [Documentación] - 2026-09-30 · UML revisado con la vara de corrección
+
+El docente pidió revisar los diagramas con la misma exigencia con que se corrigió el informe de
+Modelamiento: son un ejemplo para estudiantes. La primera versión no la cumplía.
+
+- **Casos de uso**, redibujados en SVG con actores y elipses de UML. Los casos «Gestionar …» eran
+  módulos, no objetivos del actor: se reemplazaron por once casos concretos. Lo planificado se marca
+  con el estereotipo `«planificado»`, no con una línea discontinua que UML no define.
+- **Clases:** jerarquía y asociaciones en diagramas separados; la de asociaciones, dibujada a mano,
+  porque el trazado automático encimaba las multiplicidades de las dos asociaciones entre
+  Departamento y Empleado. La asignación se describe como asociación reificada, no como clase de
+  asociación. Se agregan `Moneda` y los tipos de retorno.
+- **Secuencia:** activación, fragmentos `alt` para las dos decisiones y guardas que ninguna línea de
+  vida atraviesa.
+- **Pie de figura** numerado en las siete figuras, y una sección que revisa cada diagrama contra la
+  vara.
+
+---
+
 ## [Documentación] - 2026-09-30 · Seguridad, UML y stack
 
 - `docs/seguridad.md`: cada control, capa por capa, con el archivo que lo implementa. Explica la
