@@ -60,3 +60,31 @@ class TestAsignacion:
         with pytest.raises(ValidationError, match="no puede ser anterior"):
             Asignacion.objects.create(empleado=marta, proyecto=proyecto(),
                                       desde=date(2026, 3, 10), hasta=date(2026, 3, 1))
+
+
+@pytest.mark.django_db
+class TestReglasDeAsignacion:
+    def test_no_dos_vigentes_al_mismo_proyecto(self, marta):
+        solar = proyecto()
+        Asignacion.objects.create(empleado=marta, proyecto=solar)
+        with pytest.raises(ValidationError, match="ya está asignado a este proyecto"):
+            Asignacion.objects.create(empleado=marta, proyecto=solar)
+
+    def test_cerrada_la_anterior_se_puede_volver_a_asignar(self, marta):
+        solar = proyecto()
+        Asignacion.objects.create(empleado=marta, proyecto=solar, desde=date(2026, 1, 5), hasta=date(2026, 2, 28))
+        Asignacion.objects.create(empleado=marta, proyecto=solar)      # la historia queda
+        assert marta.asignaciones.count() == 2
+
+    def test_proyecto_desactivado_no_admite_asignaciones_nuevas(self, marta):
+        solar = proyecto(activo=False)
+        with pytest.raises(ValidationError, match="desactivado"):
+            Asignacion.objects.create(empleado=marta, proyecto=solar)
+
+    def test_una_asignacion_existente_se_puede_cerrar_aunque_el_proyecto_se_desactive(self, marta):
+        solar = proyecto()
+        a = Asignacion.objects.create(empleado=marta, proyecto=solar)
+        solar.activo = False
+        solar.save()
+        a.hasta = date(2026, 9, 29)
+        a.save()                                                         # cerrar sí se permite

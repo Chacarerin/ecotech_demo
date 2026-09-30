@@ -69,3 +69,16 @@ class Asignacion(ModeloAuditable):
     def clean(self):
         if self.hasta and self.hasta < self.desde:
             raise ValidationError({"hasta": "La fecha de término no puede ser anterior a la de inicio."})
+        # A un proyecto desactivado no se asigna gente nueva
+        if self._state.adding and self.proyecto_id and not self.proyecto.activo:
+            raise ValidationError({"proyecto": "El proyecto está desactivado: no admite asignaciones nuevas."})
+        # Regla del caso: sin dos asignaciones vigentes del mismo empleado al mismo proyecto
+        if self.vigente and self.empleado_id and self.proyecto_id:
+            hoy = timezone.localdate()
+            otra_vigente = (
+                Asignacion.objects.filter(empleado_id=self.empleado_id, proyecto_id=self.proyecto_id)
+                .exclude(pk=self.pk)
+                .filter(models.Q(hasta__isnull=True) | models.Q(hasta__gte=hoy))
+            )
+            if otra_vigente.exists():
+                raise ValidationError({"empleado": "El empleado ya está asignado a este proyecto."})
