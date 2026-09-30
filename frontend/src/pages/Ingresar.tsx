@@ -7,12 +7,14 @@ import { z } from 'zod'
 
 import { ErrorApi } from '../api/cliente'
 import { useSesion } from '../auth/contexto'
+import CuentasDemo, { HAY_DEMO } from '../components/CuentasDemo'
 
 const esquema = z.object({
   usuario: z.string().trim().min(1, 'Ingrese su usuario.'),
   clave: z.string().min(1, 'Ingrese su clave.'),
 })
 type Datos = z.infer<typeof esquema>
+
 
 function mensajeDeError(error: unknown): string {
   if (error instanceof ErrorApi) {
@@ -28,7 +30,7 @@ export default function Ingresar() {
   const navegar = useNavigate()
   const destino = (useLocation().state as { desde?: string } | null)?.desde ?? '/'
   const [error, setError] = useState<string | null>(null)
-  const { register, handleSubmit, formState } = useForm<Datos>({ resolver: zodResolver(esquema) })
+  const { register, handleSubmit, setValue, formState } = useForm<Datos>({ resolver: zodResolver(esquema) })
 
   if (usuario) return <Navigate to={destino} replace />
 
@@ -46,7 +48,7 @@ export default function Ingresar() {
     'w-full rounded-lg border border-borde bg-tarjeta px-3 py-3 outline-none focus:border-acento focus:ring-2 focus:ring-acento/20'
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-sm flex-col justify-center gap-6 px-4">
+    <main className="mx-auto flex min-h-svh max-w-sm flex-col justify-center gap-6 px-4 py-8">
       <div className="flex items-center gap-3">
         <span className="rounded-lg bg-acento p-2 text-white">
           <Leaf size={24} strokeWidth={1.75} aria-hidden />
@@ -89,6 +91,16 @@ export default function Ingresar() {
           Ingresar
         </button>
       </form>
+
+      {HAY_DEMO && (
+        <CuentasDemo
+          onElegir={(cuenta) => {
+            setValue('usuario', cuenta)
+            setValue('clave', cuenta)
+            void enviar()
+          }}
+        />
+      )}
     </main>
   )
 }

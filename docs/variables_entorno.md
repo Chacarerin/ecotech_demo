@@ -26,6 +26,7 @@
 | `FIELD_ENCRYPTION_KEY` | Clave Fernet de los datos personales | generada | generada, **respaldada** | **Sí** |
 | `JWT_ACCESO_MINUTOS` | Vigencia del token de acceso | `15` | `15` | No |
 | `JWT_RENOVACION_HORAS` | Vigencia de la renovación | `8` | `8` | No |
+| `DEMO_CUENTAS` | `true` hace que `cargar_demo` cree las tres cuentas públicas de la demostración | vacía | `true` | No |
 
 > [!CAUTION]
 > **`FIELD_ENCRYPTION_KEY` no se puede perder ni cambiar a la ligera.** Con otra clave, los
@@ -50,11 +51,27 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 |----------|-----------|------------|------------|---------|
 | `VITE_API_URL` | Dirección de la API | `http://localhost:8000` | `https://ecotech-api.antostudio.cl` | No |
 | `VITE_SITE_URL` | Dirección de la interfaz | `http://localhost:5173` | `https://ecotech.antostudio.cl` | No |
+| `VITE_DEMO` | `true` muestra las cuentas de demostración al ingresar | vacía | `true` | No |
 
 > [!WARNING]
 > **Toda variable `VITE_*` es pública.** Se compila dentro del JavaScript que descarga cualquier
 > visitante. Nunca se pone una credencial en una variable `VITE_*`, aunque el archivo `.env` no
 > se versione.
+
+> [!NOTE]
+> **La excepción deliberada: las cuentas de demostración.** `admin`, `gerente` y `empleado`, con la
+> clave igual al usuario, se muestran en la pantalla de ingreso porque este es un proyecto
+> académico y su propósito es que cualquiera recorra los tres roles. No son credenciales filtradas:
+> son públicas por diseño, y por eso se tomaron tres resguardos.
+>
+> - **Ninguna entra al panel de Django.** Tienen rol dentro de la aplicación, no privilegios de sistema.
+>   La cuenta real de administración es otra y su clave no se publica.
+> - **Los datos se restablecen cada noche** con `cargar_demo --restablecer`, que también repone las
+>   claves si alguien las cambió.
+> - **Solo existen donde se activan.** Sin `DEMO_CUENTAS=true` no se crean, y sin `VITE_DEMO=true` la
+>   pantalla no las muestra: quien clona el repositorio no queda con usuarios de clave conocida.
+>
+> En un sistema real no se hace ninguna de estas tres cosas.
 
 ---
 
