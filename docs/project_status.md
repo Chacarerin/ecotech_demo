@@ -57,7 +57,7 @@
 | 2 | Modelo `Asignacion` como tabla intermedia empleado ↔ proyecto, con vigencia | `feat(proyectos): asignaciones con vigencia` |
 | 3 | Regla: sin dos asignaciones vigentes del mismo empleado al mismo proyecto | `feat(proyectos): una asignación vigente por empleado y proyecto` |
 | 4 | Un proyecto no se elimina: se desactiva (`PROTECT` cuando tenga horas) | `feat(proyectos): desactivar en vez de eliminar` |
-| 5 | API de proyectos: administración todo; gerente los de su gente; empleado los suyos | `feat(proyectos): API de proyectos con alcance por rol` |
+| 5 | API de proyectos: administración todo; gerente los activos y los de su gente; empleado los suyos | `feat(proyectos): API de proyectos con alcance por rol` |
 | 6 | API de asignaciones: asignar y cerrar | `feat(proyectos): API de asignaciones` |
 | 7 | Interfaz: listado y ficha del proyecto | `feat(frontend): módulo de proyectos` |
 | 8 | Interfaz: asignar y desasignar empleados desde la ficha | `feat(frontend): asignaciones desde la ficha del proyecto` |

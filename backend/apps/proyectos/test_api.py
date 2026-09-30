@@ -30,9 +30,15 @@ def test_administracion_ve_todos_con_su_dotacion(escenario, proyectos):
     assert {p["nombre"]: p["asignados_vigentes"] for p in r.json()}["Solar"] == 1
 
 
-def test_el_gerente_ve_los_proyectos_con_gente_de_su_departamento(escenario, proyectos):
+def test_el_gerente_ve_los_activos_para_poder_asignar_a_su_gente(escenario, proyectos):
+    # Sin esto no podría asignar a la primera persona: el proyecto le sería invisible
+    assert nombres(como(escenario["gerente"]).get(URL)) == ["Eólico", "Hídrico", "Solar"]
+
+
+def test_de_los_desactivados_el_gerente_ve_solo_los_de_su_gente(escenario, proyectos):
+    Proyecto.objects.filter(pk__in=[proyectos["solar"].pk, proyectos["eolico"].pk]).update(activo=False)
     cliente = como(escenario["gerente"])
-    assert nombres(cliente.get(URL)) == ["Solar"]
+    assert nombres(cliente.get(URL)) == ["Hídrico", "Solar"]
     assert cliente.get(f"{URL}{proyectos['eolico'].id}/").status_code == 404
 
 

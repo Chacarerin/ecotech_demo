@@ -19,8 +19,9 @@ def vigente(prefijo: str = "") -> Q:
 
 
 class ProyectoViewSet(viewsets.ModelViewSet):
-    """Administración: todo. Gerente: los proyectos con gente de su departamento.
-    Empleado: los proyectos en que está asignado. Nadie elimina: se desactiva."""
+    """Administración: todo. Gerente: los activos, para poder asignar a su gente, y los
+    desactivados en que trabajó alguien de su departamento. Empleado: los proyectos en que
+    está asignado. Nadie elimina: se desactiva."""
 
     serializer_class = ProyectoSerializer
     http_method_names = ["get", "post", "put", "patch", "head", "options"]   # sin DELETE
@@ -33,7 +34,10 @@ class ProyectoViewSet(viewsets.ModelViewSet):
         consulta = Proyecto.objects.annotate(
             asignados_vigentes=Count("asignaciones", filter=vigente("asignaciones__"), distinct=True))
         if usuario.es_gerente:
-            consulta = del_departamento_del_gerente(consulta, usuario, "asignaciones__empleado__departamento_id")
+            # Sin departamento no hay a quién asignar: no ve nada (test_gerente_sin_departamento)
+            depto = departamento_de(usuario)
+            consulta = consulta.none() if depto is None else consulta.filter(
+                Q(activo=True) | Q(asignaciones__empleado__departamento_id=depto))
         elif not usuario.es_administrador:
             consulta = consulta.filter(asignaciones__empleado__usuario=usuario)
 

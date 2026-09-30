@@ -25,7 +25,7 @@ obliga a tener roles.
 | Rol | Quién es en el caso | Acceso |
 |-----|---------------------|--------|
 | `administrador` | Recursos humanos | Todo, incluidos los datos personales cifrados |
-| `gerente` | Gerente de un departamento | Su departamento y los proyectos donde hay gente de su departamento, sin datos personales |
+| `gerente` | Gerente de un departamento | Su departamento sin datos personales; los proyectos activos y los desactivados donde trabajó su gente |
 | `empleado` | Cualquier trabajador | Su ficha, sus proyectos y sus horas |
 
 El detalle recurso por recurso está en [`project_spec.md`](project_spec.md) §4.2.
