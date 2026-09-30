@@ -16,3 +16,12 @@ X_FRAME_OPTIONS = "DENY"
 # Deliberadamente NO se activan SECURE_HSTS_INCLUDE_SUBDOMAINS ni SECURE_HSTS_PRELOAD,
 # aunque `check --deploy` los sugiere: el dominio padre aloja otros sitios en otros
 # subdominios, y la política se extendería a sitios que no son de este proyecto.
+
+# Solo JSON. En desarrollo, DRF muestra además su interfaz navegable: una página HTML para
+# explorar la API desde el navegador, útil para aprender. En producción se retira, porque le
+# muestra a cualquiera la lista de rutas y formularios para probarlas, y porque un cliente real
+# (la interfaz, una app, un script) nunca la usa.
+REST_FRAMEWORK = {  # noqa: F405
+    **REST_FRAMEWORK,  # noqa: F405
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+}
