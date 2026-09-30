@@ -52,3 +52,39 @@ def test_desactivar_y_filtrar_por_estado(escenario, proyectos):
     admin = como(escenario["administrador"])
     assert admin.patch(f"{URL}{proyectos['solar'].id}/", {"activo": False}, format="json").status_code == 200
     assert nombres(admin.get(URL, {"activo": "true"})) == ["Eólico", "Hídrico"]
+
+
+ASIG = "/api/asignaciones/"
+
+
+def test_el_gerente_asigna_a_su_gente_pero_no_a_la_de_otro_departamento(escenario, proyectos):
+    gerente = como(escenario["gerente"])
+    hidrico = Proyecto.objects.get(nombre="Hídrico")
+    propio = {"empleado": escenario["empleado"].empleado.id, "proyecto": hidrico.id}
+    ajeno = {"empleado": escenario["administrador"].empleado.id, "proyecto": hidrico.id}
+    assert gerente.post(ASIG, propio, format="json").status_code == 201
+    r = gerente.post(ASIG, ajeno, format="json")
+    assert r.status_code == 403 and "su departamento" in r.json()["mensaje"]
+
+
+def test_el_empleado_consulta_las_suyas_y_no_asigna(escenario, proyectos):
+    cliente = como(escenario["empleado"])
+    assert [a["proyecto_nombre"] for a in cliente.get(ASIG).json()] == ["Solar"]
+    r = cliente.post(ASIG, {"empleado": escenario["empleado"].empleado.id,
+                            "proyecto": proyectos["eolico"].id}, format="json")
+    assert r.status_code == 403
+
+
+def test_asignacion_repetida_responde_400_con_el_mensaje_del_caso(escenario, proyectos):
+    r = como(escenario["administrador"]).post(ASIG, {"empleado": escenario["empleado"].empleado.id,
+                                                    "proyecto": proyectos["solar"].id}, format="json")
+    assert r.status_code == 400
+    assert r.json()["campos"]["empleado"] == ["El empleado ya está asignado a este proyecto."]
+
+
+def test_cerrar_solo_cambia_la_fecha_de_termino(escenario, proyectos):
+    a = Asignacion.objects.get(proyecto=proyectos["solar"])
+    r = como(escenario["administrador"]).patch(f"{ASIG}{a.id}/", {"hasta": "2026-09-29",
+                                                                  "proyecto": proyectos["eolico"].id}, format="json")
+    assert r.status_code == 200 and r.json()["hasta"] == "2026-09-29"
+    assert r.json()["proyecto"] == proyectos["solar"].id          # el proyecto no se reescribe

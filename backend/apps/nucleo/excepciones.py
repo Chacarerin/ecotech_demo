@@ -57,6 +57,11 @@ def manejar_excepcion(exc, context):
         (valor for tipo, valor in CODIGOS.items() if isinstance(exc, tipo)),
         ("error", "No se pudo completar la solicitud."),
     )
+    # Si el código dio un mensaje propio —«Solo puede asignar empleados de su departamento»—,
+    # ese es más útil que el genérico. Las validaciones llevan el suyo en «campos».
+    if not isinstance(exc, exceptions.ValidationError) and isinstance(exc.detail, str) \
+            and exc.detail != exc.default_detail:
+        mensaje = str(exc.detail)
     cuerpo = {"error": codigo, "mensaje": mensaje}
     if isinstance(exc, exceptions.ValidationError):
         cuerpo["campos"] = exc.detail if isinstance(exc.detail, dict) else {"general": exc.detail}

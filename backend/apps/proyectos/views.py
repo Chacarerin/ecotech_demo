@@ -2,13 +2,14 @@
 from django.db.models import Count, Q
 from django.utils import timezone
 from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
-from apps.nucleo.permisos import EsAdministrador
+from apps.nucleo.permisos import EsAdministrador, EsGerenteOAdministrador
 from apps.organizacion.views import departamento_de
 
-from .models import Proyecto
-from .serializers import ProyectoSerializer
+from .models import Asignacion, Proyecto
+from .serializers import AsignacionSerializer, ProyectoSerializer
 
 
 def vigente(prefijo: str = "") -> Q:
@@ -41,3 +42,35 @@ class ProyectoViewSet(viewsets.ModelViewSet):
         if (activo := self.request.query_params.get("activo")) in ("true", "false"):
             consulta = consulta.filter(activo=activo == "true")
         return consulta.distinct()
+
+
+class AsignacionViewSet(viewsets.ModelViewSet):
+    """Administración: todas. Gerente: las de su departamento, y solo con su gente.
+    Empleado: consulta las suyas. Cerrar es PATCH con «hasta»; anular es DELETE."""
+
+    serializer_class = AsignacionSerializer
+
+    def get_permissions(self):
+        return [IsAuthenticated()] if self.request.method in SAFE_METHODS else [EsGerenteOAdministrador()]
+
+    def get_queryset(self):
+        usuario = self.request.user
+        consulta = Asignacion.objects.select_related("empleado", "proyecto")
+        if usuario.es_gerente:
+            consulta = consulta.filter(empleado__departamento_id=departamento_de(usuario))
+        elif not usuario.es_administrador:
+            consulta = consulta.filter(empleado__usuario=usuario)
+        for filtro in ("proyecto", "empleado"):
+            if valor := self.request.query_params.get(filtro):
+                consulta = consulta.filter(**{f"{filtro}_id": valor})
+        if self.request.query_params.get("vigentes") == "true":
+            consulta = consulta.filter(vigente())
+        return consulta
+
+    def perform_create(self, serializer):
+        usuario = self.request.user
+        empleado = serializer.validated_data["empleado"]
+        # El gerente asigna solo a su gente: se verifica aunque la interfaz no le muestre a otros
+        if usuario.es_gerente and empleado.departamento_id != departamento_de(usuario):
+            raise PermissionDenied("Solo puede asignar empleados de su departamento.")
+        serializer.save()
