@@ -35,6 +35,11 @@ export const alExpirar = (accion: () => void) => {
 }
 
 const aCamel = (texto: string) => texto.replace(/_([a-z])/g, (_, letra: string) => letra.toUpperCase())
+const aSnake = (texto: string) => texto.replace(/[A-Z]/g, (letra) => `_${letra.toLowerCase()}`)
+
+/** Cuerpo JSON de una petición: convierte las claves de camelCase a snake_case. */
+export const comoJson = (datos: Record<string, unknown>) =>
+  JSON.stringify(Object.fromEntries(Object.entries(datos).map(([k, v]) => [aSnake(k), v])))
 
 function convertirClaves(valor: unknown): unknown {
   if (Array.isArray(valor)) return valor.map(convertirClaves)

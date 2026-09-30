@@ -61,14 +61,15 @@ export default function Layout() {
             key={m.ruta}
             to={m.ruta}
             end={m.ruta === '/'}
+            aria-label={m.nombre}
             className={({ isActive }) =>
-              `flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-xs ${
+              `flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-0.5 text-[10px] min-[360px]:text-[11px] ${
                 isActive ? 'text-acento' : 'text-texto-tenue'
               }`
             }
           >
             <m.icono size={24} strokeWidth={1.75} aria-hidden />
-            {m.nombre}
+            <span className="w-full truncate text-center">{m.nombreCorto ?? m.nombre}</span>
           </NavLink>
         ))}
       </nav>

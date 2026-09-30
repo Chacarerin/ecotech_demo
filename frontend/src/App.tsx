@@ -6,6 +6,8 @@ import { MODULOS } from './components/navegacion'
 import EnConstruccion from './pages/EnConstruccion'
 import Ingresar from './pages/Ingresar'
 import Panel from './pages/Panel'
+import FormularioDepartamento from './features/departamentos/FormularioDepartamento'
+import ListaDepartamentos from './features/departamentos/ListaDepartamentos'
 
 const rutas = createBrowserRouter([
   { path: '/ingresar', element: <Ingresar /> },
@@ -18,8 +20,14 @@ const rutas = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Panel /> },
-      // Cada módulo exige los mismos roles con que aparece en la navegación
-      ...MODULOS.filter((m) => m.ruta !== '/').map((m) => ({
+      // Módulos construidos: cada uno exige los mismos roles con que aparece en la navegación
+      ...[
+        { path: 'departamentos', element: <ListaDepartamentos /> },
+        { path: 'departamentos/nuevo', element: <FormularioDepartamento /> },
+        { path: 'departamentos/:id', element: <FormularioDepartamento /> },
+      ].map((r) => ({ ...r, element: <RutaProtegida roles={['administrador']}>{r.element}</RutaProtegida> })),
+      // Módulos aún en construcción
+      ...MODULOS.filter((m) => m.hito).map((m) => ({
         path: m.ruta.slice(1),
         element: (
           <RutaProtegida roles={m.roles}>
