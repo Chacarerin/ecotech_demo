@@ -14,7 +14,7 @@ export interface Modulo {
 /** Una sola fuente para la navegación y las rutas: lo que se ve y lo que se protege coinciden. */
 export const MODULOS: Modulo[] = [
   { ruta: '/', nombre: 'Panel', icono: LayoutDashboard, roles: ['administrador', 'gerente', 'empleado'] },
-  { ruta: '/empleados', nombre: 'Empleados', nombreCorto: 'Personal', icono: Users, roles: ['administrador'], hito: 3 },
+  { ruta: '/empleados', nombre: 'Empleados', nombreCorto: 'Personal', icono: Users, roles: ['administrador'] },
   { ruta: '/departamentos', nombre: 'Departamentos', nombreCorto: 'Deptos.', icono: Building2, roles: ['administrador'] },
   { ruta: '/proyectos', nombre: 'Proyectos', icono: FolderKanban, roles: ['administrador', 'gerente'], hito: 4 },
   { ruta: '/horas', nombre: 'Horas', icono: Clock, roles: ['administrador', 'gerente', 'empleado'], hito: 5 },
