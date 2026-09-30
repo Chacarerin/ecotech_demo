@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pytest
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from apps.organizacion.models import Empleado
 
@@ -86,7 +87,7 @@ class TestReglasDeAsignacion:
         a = Asignacion.objects.create(empleado=marta, proyecto=solar)
         solar.activo = False
         solar.save()
-        a.hasta = date(2026, 9, 29)
+        a.hasta = timezone.localdate()
         a.save()                                                         # cerrar sí se permite
 
 

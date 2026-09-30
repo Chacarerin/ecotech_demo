@@ -1,6 +1,7 @@
 from datetime import date
 
 import pytest
+from django.utils import timezone
 
 from apps.organizacion.test_api_departamentos import como, escenario  # noqa: F401
 
@@ -90,7 +91,8 @@ def test_asignacion_repetida_responde_400_con_el_mensaje_del_caso(escenario, pro
 
 def test_cerrar_solo_cambia_la_fecha_de_termino(escenario, proyectos):
     a = Asignacion.objects.get(proyecto=proyectos["solar"])
-    r = como(escenario["administrador"]).patch(f"{ASIG}{a.id}/", {"hasta": "2026-09-29",
+    hoy = timezone.localdate().isoformat()              # una fecha fija se vuelve anterior al inicio
+    r = como(escenario["administrador"]).patch(f"{ASIG}{a.id}/", {"hasta": hoy,
                                                                   "proyecto": proyectos["eolico"].id}, format="json")
-    assert r.status_code == 200 and r.json()["hasta"] == "2026-09-29"
+    assert r.status_code == 200 and r.json()["hasta"] == hoy
     assert r.json()["proyecto"] == proyectos["solar"].id          # el proyecto no se reescribe
