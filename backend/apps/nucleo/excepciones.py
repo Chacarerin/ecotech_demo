@@ -9,6 +9,7 @@ registra completo en el log del servidor y al cliente solo le llega un mensaje g
 """
 import logging
 
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db.models import ProtectedError
 from django.http import Http404
 from rest_framework import exceptions, status
@@ -29,6 +30,11 @@ CODIGOS = {
 
 
 def manejar_excepcion(exc, context):
+    # Las reglas del modelo lanzan la ValidationError de Django: se traduce a la de la API
+    if isinstance(exc, DjangoValidationError):
+        exc = exceptions.ValidationError(
+            exc.message_dict if hasattr(exc, "error_dict") else {"general": exc.messages}
+        )
     if isinstance(exc, Http404):
         exc = exceptions.NotFound()
     if isinstance(exc, ProtectedError):

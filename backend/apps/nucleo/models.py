@@ -9,13 +9,22 @@ from django.db import models
 
 
 class ModeloAuditable(models.Model):
-    """Toda entidad del negocio sabe cuándo se creó y cuándo se modificó por última vez."""
+    """Toda entidad del negocio sabe cuándo se creó y cuándo se modificó por última vez.
+
+    Además valida antes de guardar. Django solo aplica las reglas del modelo si alguien
+    llama a full_clean(), y la API REST no lo hace por su cuenta: sin esto, una regla del
+    caso se podría saltar con una petición armada a mano.
+    """
 
     creado_en = models.DateTimeField(auto_now_add=True)
     modificado_en = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class Persona(ModeloAuditable):

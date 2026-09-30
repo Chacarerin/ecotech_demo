@@ -6,6 +6,7 @@ Aquí se ven juntos varios conceptos de la asignatura:
 - Asociación: Empleado → Departamento (0..1) y Departamento → gerente (0..1).
 """
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -32,6 +33,11 @@ class Departamento(ModeloAuditable):
     def __str__(self) -> str:
         return self.nombre
 
+    def clean(self):
+        # Regla del caso: el gerente dirige un departamento del que forma parte
+        if self.gerente_id and self.gerente.departamento_id != self.pk:
+            raise ValidationError({"gerente": "El gerente debe ser integrante del departamento."})
+
 
 class Empleado(Persona):
     """Persona contratada por EcoTech. El identificador lo asigna la base al crearlo."""
@@ -53,3 +59,10 @@ class Empleado(Persona):
 
     class Meta:
         ordering = ["nombre"]
+
+    def clean(self):
+        # Si dirige un departamento, no puede trasladarse a otro sin dejar antes la gerencia
+        if self.pk and self.departamentos_a_cargo.exclude(pk=self.departamento_id).exists():
+            raise ValidationError({
+                "departamento": "Este empleado es gerente de otro departamento: asigne otro gerente antes de trasladarlo.",
+            })

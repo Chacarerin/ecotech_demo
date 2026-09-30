@@ -27,10 +27,18 @@ def protegida(request):
     pass
 
 
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def regla_del_modelo(request):
+    from django.core.exceptions import ValidationError as DjangoValidationError
+    raise DjangoValidationError({"gerente": "El gerente debe ser integrante del departamento."})
+
+
 urlpatterns = [
     path("valida/", valida),
     path("revienta/", revienta),
     path("protegida/", protegida),
+    path("regla/", regla_del_modelo),
 ]
 
 
@@ -58,3 +66,10 @@ def test_error_no_previsto_no_revela_detalles(cliente):
     assert r.status_code == 500
     assert r.json() == {"error": "interno", "mensaje": "Ocurrió un error inesperado."}
     assert "SELECT" not in r.content.decode()
+
+
+def test_una_regla_del_modelo_llega_como_400_y_no_como_500(cliente):
+    r = cliente.post("/regla/")
+    assert r.status_code == 400
+    assert r.json()["error"] == "validacion"
+    assert r.json()["campos"] == {"gerente": ["El gerente debe ser integrante del departamento."]}
