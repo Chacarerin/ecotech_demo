@@ -45,6 +45,7 @@ export const proyectos = {
 }
 
 export const asignaciones = {
+  vigentes: () => pedir<Asignacion[]>('/api/asignaciones/?vigentes=true'),
   delProyecto: (proyecto: number) => pedir<Asignacion[]>(`/api/asignaciones/?proyecto=${proyecto}`),
   crear: (empleado: number, proyecto: number) =>
     pedir<Asignacion>('/api/asignaciones/', { method: 'POST', body: comoJson({ empleado, proyecto }) }),
