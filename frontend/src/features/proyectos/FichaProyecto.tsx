@@ -13,6 +13,7 @@ import { EstadoError } from '../../components/Estados'
 import { aplicarErroresApi } from '../../components/errorApi'
 import { BotonPrimario, Campo, estiloCampo } from '../../components/Formulario'
 import { fecha } from '../../lib/formato'
+import Asignaciones from './Asignaciones'
 
 const coordenada = (limite: number) =>
   z
@@ -55,6 +56,7 @@ export default function FichaProyecto() {
         Proyectos
       </Link>
       {esAdmin ? <FormularioProyecto id={id} actual={actual.data} /> : actual.data && <Resumen p={actual.data} />}
+      {id && actual.data && <Asignaciones proyecto={actual.data} />}
     </section>
   )
 }
