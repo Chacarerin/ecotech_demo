@@ -37,21 +37,24 @@ jobs:
           if [ -n "$VPS_HOST" ]; then echo "listo=true" >> "$GITHUB_OUTPUT"
           else echo "::notice::Sin secretos del servidor todavía: se omite el deploy."; fi
 
+      # Una sola conexión: el servidor limita las conexiones SSH seguidas, y un
+      # ssh-keyscan previo abre varias y deja bloqueada la siguiente.
       - name: Ejecutar el deploy en el servidor
         if: steps.config.outputs.listo == 'true'
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
-        run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
-          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          ssh -i ~/.ssh/deploy "$VPS_USER@$VPS_HOST"
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          command_timeout: 15m
+          # El servidor ignora este valor y ejecuta siempre su comando forzado: se deja
+          # explícito para que se lea qué corre.
+          script: /opt/ecotech_demo/deploy.sh
 
       - name: Verificar la API y la interfaz
         if: steps.config.outputs.listo == 'true'
         run: |
-          sleep 5
-          curl -fsS https://ecotech-api.antostudio.cl/api/health/
-          curl -fsSI https://ecotech.antostudio.cl/ | head -1
+          curl -fsS --retry 3 --retry-delay 5 https://ecotech-api.antostudio.cl/api/health/
+          curl -fsS -o /dev/null -w "HTTP %{http_code} · https://ecotech.antostudio.cl/\n" \
+            --retry 3 --retry-delay 5 https://ecotech.antostudio.cl/
