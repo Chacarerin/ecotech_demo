@@ -9,6 +9,8 @@ import Panel from './pages/Panel'
 import FormularioDepartamento from './features/departamentos/FormularioDepartamento'
 import FormularioEmpleado from './features/empleados/FormularioEmpleado'
 import ListaEmpleados from './features/empleados/ListaEmpleados'
+import FichaProyecto from './features/proyectos/FichaProyecto'
+import ListaProyectos from './features/proyectos/ListaProyectos'
 import ListaDepartamentos from './features/departamentos/ListaDepartamentos'
 
 const rutas = createBrowserRouter([
@@ -31,6 +33,11 @@ const rutas = createBrowserRouter([
         { path: 'empleados/nuevo', element: <FormularioEmpleado /> },
         { path: 'empleados/:id', element: <FormularioEmpleado /> },
       ].map((r) => ({ ...r, element: <RutaProtegida roles={['administrador']}>{r.element}</RutaProtegida> })),
+      ...[
+        { path: 'proyectos', element: <ListaProyectos /> },
+        { path: 'proyectos/:id', element: <FichaProyecto /> },
+      ].map((r) => ({ ...r, element: <RutaProtegida roles={['administrador', 'gerente']}>{r.element}</RutaProtegida> })),
+      { path: 'proyectos/nuevo', element: <RutaProtegida roles={['administrador']}><FichaProyecto /></RutaProtegida> },
       // Módulos aún en construcción
       ...MODULOS.filter((m) => m.hito).map((m) => ({
         path: m.ruta.slice(1),

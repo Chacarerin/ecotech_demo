@@ -16,7 +16,7 @@ export const MODULOS: Modulo[] = [
   { ruta: '/', nombre: 'Panel', icono: LayoutDashboard, roles: ['administrador', 'gerente', 'empleado'] },
   { ruta: '/empleados', nombre: 'Empleados', nombreCorto: 'Personal', icono: Users, roles: ['administrador'] },
   { ruta: '/departamentos', nombre: 'Departamentos', nombreCorto: 'Deptos.', icono: Building2, roles: ['administrador'] },
-  { ruta: '/proyectos', nombre: 'Proyectos', icono: FolderKanban, roles: ['administrador', 'gerente'], hito: 4 },
+  { ruta: '/proyectos', nombre: 'Proyectos', icono: FolderKanban, roles: ['administrador', 'gerente'] },
   { ruta: '/horas', nombre: 'Horas', icono: Clock, roles: ['administrador', 'gerente', 'empleado'], hito: 5 },
   { ruta: '/reportes', nombre: 'Reportes', icono: BarChart3, roles: ['administrador', 'gerente'], hito: 6 },
 ]
