@@ -1,8 +1,10 @@
 """Proyectos y asignaciones · docs/project_spec.md §2.3 y docs/architecture.md §3.5."""
 from decimal import Decimal
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 from apps.nucleo.models import ModeloAuditable
 
@@ -28,9 +30,42 @@ class Proyecto(ModeloAuditable):
         MinValueValidator(Decimal("-180")), MaxValueValidator(Decimal("180"))])
     moneda = models.CharField(max_length=3, choices=Moneda.choices, default=Moneda.CLP)
     activo = models.BooleanField(default=True)
+    # Muchos a muchos con atributos propios: la asociación pasa por Asignacion
+    empleados = models.ManyToManyField("organizacion.Empleado", through="Asignacion", related_name="proyectos")
 
     class Meta:
         ordering = ["-activo", "nombre"]
 
     def __str__(self) -> str:
         return self.nombre
+
+
+class Asignacion(ModeloAuditable):
+    """Empleado ↔ Proyecto, con vigencia.
+
+    Es la tabla intermedia de la relación de muchos a muchos, igual que en el diagrama de
+    clases del caso: tiene atributos propios, desde y hasta, que una lista simple de
+    empleados no podría guardar. Cerrar una asignación conserva la historia; por eso
+    no se borra, se le pone fecha de término.
+    """
+
+    empleado = models.ForeignKey("organizacion.Empleado", on_delete=models.PROTECT, related_name="asignaciones")
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.PROTECT, related_name="asignaciones")
+    desde = models.DateField(default=timezone.localdate)
+    hasta = models.DateField(null=True, blank=True)      # vacío: sigue vigente
+
+    class Meta:
+        ordering = ["-desde"]
+        verbose_name = "asignación"
+        verbose_name_plural = "asignaciones"
+
+    def __str__(self) -> str:
+        return f"{self.empleado} en {self.proyecto}"
+
+    @property
+    def vigente(self) -> bool:
+        return self.hasta is None or self.hasta >= timezone.localdate()
+
+    def clean(self):
+        if self.hasta and self.hasta < self.desde:
+            raise ValidationError({"hasta": "La fecha de término no puede ser anterior a la de inicio."})
