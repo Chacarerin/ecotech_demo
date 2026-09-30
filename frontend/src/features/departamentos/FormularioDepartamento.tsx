@@ -37,9 +37,11 @@ export default function FormularioDepartamento() {
     resolver: zodResolver(esquema),
     defaultValues: { nombre: '', gerente: null },
   })
+  // Igual que en el empleado: sin la lista de integrantes el select mostraría «Sin gerente»
+  // y guardar quitaría al gerente sin que nadie lo pidiera.
   useEffect(() => {
-    if (actual.data) reset({ nombre: actual.data.nombre, gerente: actual.data.gerente })
-  }, [actual.data, reset])
+    if (actual.data && integrantes.data) reset({ nombre: actual.data.nombre, gerente: actual.data.gerente })
+  }, [actual.data, integrantes.data, reset])
 
   const volver = () => {
     void cache.invalidateQueries({ queryKey: ['departamentos'] })
@@ -52,7 +54,7 @@ export default function FormularioDepartamento() {
   })
   const eliminar = useMutation({ mutationFn: () => departamentos.eliminar(id!), onSuccess: volver })
 
-  if (id && actual.isPending) return <Cargando />
+  if (id && (actual.isPending || integrantes.isPending)) return <Cargando />
   if (actual.error) return <EstadoError error={actual.error} />
 
   return (
