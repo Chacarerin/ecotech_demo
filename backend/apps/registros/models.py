@@ -3,13 +3,17 @@
 Es la composición del caso: un registro no existe sin su proyecto. Por eso la clave hacia
 el proyecto es PROTECT, y un proyecto con horas registradas no se puede eliminar.
 """
+from decimal import Decimal
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from apps.nucleo.models import ModeloAuditable
 from apps.nucleo.validadores import NoFutura, media_hora
+
+TOPE_DIARIO = Decimal("12")
 
 
 class RegistroTiempo(ModeloAuditable):
@@ -43,3 +47,13 @@ class RegistroTiempo(ModeloAuditable):
         ).exists()
         if not asignado:
             raise ValidationError({"proyecto": "No tiene asignación vigente en este proyecto para esa fecha."})
+
+        # Regla del caso: máximo 12 horas por empleado y día, sumando todos sus proyectos.
+        # Se excluye el propio registro, para que editarlo no lo cuente dos veces.
+        if self.horas is not None:
+            otras = (RegistroTiempo.objects.filter(empleado_id=self.empleado_id, fecha=self.fecha)
+                     .exclude(pk=self.pk).aggregate(total=Sum("horas"))["total"]) or Decimal("0")
+            if otras + self.horas > TOPE_DIARIO:
+                disponibles = max(TOPE_DIARIO - otras, Decimal("0"))
+                horas = f"{disponibles.normalize():f}".replace(".", ",")           # 4.5 → «4,5»
+                raise ValidationError({"horas": f"Supera las 12 horas diarias. Ese día le quedan {horas} h."})

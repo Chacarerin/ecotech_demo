@@ -77,3 +77,23 @@ class TestAsignacionVigente:
         assert registro(base, fecha=date(2026, 9, 15)).pk           # el día de término todavía cuenta
         with pytest.raises(ValidationError, match=self.MENSAJE):
             registro(base, fecha=date(2026, 9, 16))
+
+
+class TestTopeDiario:
+    def test_doce_horas_en_dos_proyectos_si_trece_no(self, base):
+        eolico = Proyecto.objects.create(nombre="Eólico", fecha_inicio=date(2026, 4, 1))
+        Asignacion.objects.create(empleado=base["diego"], proyecto=eolico, desde=date(2026, 4, 1))
+        registro(base, horas=Decimal("8"))
+        assert registro(base, proyecto=eolico, horas=Decimal("4")).pk
+        with pytest.raises(ValidationError, match="Supera las 12 horas diarias. Ese día le quedan 0 h."):
+            registro(base, proyecto=eolico, horas=Decimal("1"))
+
+    def test_editar_un_registro_no_lo_cuenta_dos_veces(self, base):
+        r = registro(base, horas=Decimal("10"))
+        r.horas = Decimal("12")
+        r.save()                                                     # 12 en total, no 22
+        assert RegistroTiempo.objects.get(pk=r.pk).horas == Decimal("12")
+
+    def test_otro_dia_no_suma(self, base):
+        registro(base, horas=Decimal("12"))
+        assert registro(base, fecha=date(2026, 9, 29), horas=Decimal("12")).pk
