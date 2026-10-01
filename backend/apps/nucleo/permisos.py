@@ -26,3 +26,9 @@ class EsGerenteOAdministrador(_PorRol):
     """Gerentes de departamento y recursos humanos."""
 
     roles = ("gerente", "administrador")
+
+
+class EsEmpleado(_PorRol):
+    """Quien trabaja en los proyectos: registra sus propias horas."""
+
+    roles = ("empleado",)
