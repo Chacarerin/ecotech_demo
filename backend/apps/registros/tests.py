@@ -1,8 +1,10 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
+from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
+from django.utils import timezone
 
 from apps.organizacion.models import Empleado
 from apps.proyectos.models import Asignacion, Proyecto
@@ -36,3 +38,23 @@ class TestComposicion:
         registro(base)
         with pytest.raises(ProtectedError):
             base["diego"].delete()
+
+
+class TestHorasYFecha:
+    @pytest.mark.parametrize("horas", ["0.5", "7", "7.5", "12"])
+    def test_horas_validas(self, base, horas):
+        assert registro(base, horas=Decimal(horas)).pk
+
+    @pytest.mark.parametrize("horas,mensaje", [
+        ("0", "Las horas van de 0,5 a 12."),
+        ("12.5", "Las horas van de 0,5 a 12."),
+        ("7.3", "pasos de media hora"),
+    ])
+    def test_horas_invalidas(self, base, horas, mensaje):
+        with pytest.raises(ValidationError, match=mensaje):
+            registro(base, horas=Decimal(horas))
+
+    def test_no_se_registran_horas_en_el_futuro(self, base):
+        manana = timezone.localdate() + timedelta(days=1)
+        with pytest.raises(ValidationError, match="No se pueden registrar horas en fechas futuras."):
+            registro(base, fecha=manana)

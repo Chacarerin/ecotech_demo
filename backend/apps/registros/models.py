@@ -7,6 +7,7 @@ from django.conf import settings
 from django.db import models
 
 from apps.nucleo.models import ModeloAuditable
+from apps.nucleo.validadores import NoFutura, media_hora
 
 
 class RegistroTiempo(ModeloAuditable):
@@ -14,9 +15,9 @@ class RegistroTiempo(ModeloAuditable):
 
     empleado = models.ForeignKey("organizacion.Empleado", on_delete=models.PROTECT, related_name="registros")
     proyecto = models.ForeignKey("proyectos.Proyecto", on_delete=models.PROTECT, related_name="registros")
-    fecha = models.DateField()
+    fecha = models.DateField(validators=[NoFutura("No se pueden registrar horas en fechas futuras.")])
     # Decimal y no float: 7,5 horas se guardan exactas, y sumarlas no acumula error
-    horas = models.DecimalField(max_digits=4, decimal_places=1)
+    horas = models.DecimalField(max_digits=4, decimal_places=1, validators=[media_hora])
     descripcion = models.TextField(blank=True)
     # Quién lo registró. Normalmente el propio empleado; queda constancia aunque no lo sea
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,

@@ -5,6 +5,7 @@ de entrada: la interfaz también valida, pero solo para responder más rápido.
 """
 import re
 from datetime import date
+from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -32,3 +33,13 @@ class NoFutura:
 
     def __eq__(self, otro) -> bool:
         return isinstance(otro, NoFutura) and self.mensaje == otro.mensaje
+
+
+def media_hora(valor) -> None:
+    """Horas de 0,5 a 12, en pasos de media hora: 7,5 sí; 7,3 no."""
+    if valor is None:
+        return
+    if valor < Decimal("0.5") or valor > Decimal("12"):
+        raise ValidationError("Las horas van de 0,5 a 12.", code="horas_fuera_de_rango")
+    if (valor * 2) % 1 != 0:
+        raise ValidationError("Las horas se registran en pasos de media hora: 7, 7,5 u 8.", code="horas_paso")
