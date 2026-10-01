@@ -12,14 +12,16 @@ alguien haya cambiado algo. Ninguna entra al panel de Django. Sin esa variable n
 en el equipo de un estudiante no aparecen usuarios con claves conocidas.
 """
 import os
-from datetime import date
-from decimal import Decimal
+from datetime import date, timedelta
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 
 from apps.organizacion.models import Departamento, Empleado
 from apps.proyectos.models import Asignacion, Proyecto
+from apps.registros.models import RegistroTiempo
 from apps.usuarios.models import Usuario
 
 DEPARTAMENTOS = ["Desarrollo Sostenible", "Operaciones", "Finanzas"]
@@ -67,7 +69,9 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **opciones):
         if opciones["restablecer"]:
-            # En orden inverso a las dependencias: las asignaciones protegen a proyectos y empleados
+            # En orden inverso a las dependencias: las horas protegen a proyectos y empleados,
+            # y las asignaciones también
+            RegistroTiempo.objects.all().delete()
             Asignacion.objects.all().delete()
             Proyecto.objects.all().delete()
             Departamento.objects.update(gerente=None)
@@ -99,13 +103,16 @@ class Command(BaseCommand):
                     proyecto.activo = False
                     proyecto.save()
 
+        if not RegistroTiempo.objects.exists():
+            self.horas_de_la_semana()
+
         if os.environ.get("DEMO_CUENTAS", "").lower() == "true":
             self.cuentas_demo(empleados)
 
         self.stdout.write(self.style.SUCCESS(
             f"Datos de demostración: {Departamento.objects.count()} departamentos, "
             f"{Empleado.objects.count()} empleados, {Proyecto.objects.count()} proyectos, "
-            f"{Asignacion.objects.count()} asignaciones."))
+            f"{Asignacion.objects.count()} asignaciones, {RegistroTiempo.objects.count()} registros de horas."))
 
     def cuentas_demo(self, empleados):
         for usuario, rol, empleado in CUENTAS:
@@ -120,3 +127,27 @@ class Command(BaseCommand):
                 empleados[empleado].usuario = cuenta
                 empleados[empleado].save()
         self.stdout.write("Cuentas de demostración listas: " + ", ".join(c[0] for c in CUENTAS))
+
+    def horas_de_la_semana(self):
+        """Horas de los últimos días hábiles, relativas a hoy: el restablecimiento nocturno las
+        renueva, de modo que la demostración siempre tiene horas recientes y editables."""
+        hoy = timezone.localdate()          # el mismo «hoy» con que el modelo rechaza fechas futuras
+        dias = [hoy - timedelta(days=n) for n in range(1, 8) if (hoy - timedelta(days=n)).weekday() < 5]
+        jornada = [Decimal("8"), Decimal("7.5"), Decimal("8"), Decimal("6.5"), Decimal("8")]
+        tareas = ["Montaje de estructuras", "Inspección de terreno", "Informe de avance",
+                  "Coordinación con el cliente", "Pruebas de rendimiento"]
+        activas = (Asignacion.objects.filter(proyecto__activo=True, hasta__isnull=True)
+                   .select_related("empleado", "proyecto").order_by("empleado_id", "proyecto_id"))
+        por_empleado = {}
+        for a in activas:
+            por_empleado.setdefault(a.empleado, []).append(a)
+        for empleado, asignaciones in por_empleado.items():
+            for i, dia in enumerate(dias):
+                vigentes = [a for a in asignaciones if a.desde <= dia]
+                if not vigentes:
+                    continue
+                # Quien está en dos proyectos reparte la jornada entre ambos
+                parte = (jornada[i % len(jornada)] * 2 / len(vigentes)).quantize(Decimal("1"), ROUND_HALF_UP) / 2
+                for a in vigentes:
+                    RegistroTiempo.objects.create(empleado=empleado, proyecto=a.proyecto, fecha=dia, horas=parte,
+                                                  descripcion=tareas[(i + a.proyecto_id) % len(tareas)])

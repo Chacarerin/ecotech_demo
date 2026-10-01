@@ -3,6 +3,7 @@ from django.core.management import call_command
 
 from apps.organizacion.models import Departamento, Empleado
 from apps.proyectos.models import Asignacion, Proyecto
+from apps.registros.models import RegistroTiempo
 from apps.usuarios.models import Usuario
 
 
@@ -53,3 +54,14 @@ def test_restablecer_deshace_los_cambios_y_repone_las_cuentas(monkeypatch):
     assert cuenta.check_password("admin")
     # Los empleados se recrearon: las cuentas vuelven a quedar ligadas
     assert Empleado.objects.get(usuario__username="gerente").nombre == "Marta Rojas Pizarro"
+
+
+@pytest.mark.django_db
+def test_carga_horas_recientes_y_restablecer_las_renueva():
+    call_command("cargar_demo")
+    assert RegistroTiempo.objects.exists()
+    # Todas cumplen las reglas del modelo: el modelo las valida al guardar
+    assert all((r.horas * 2) % 1 == 0 for r in RegistroTiempo.objects.all())
+    # Con horas registradas, restablecer no choca con las claves protegidas
+    call_command("cargar_demo", restablecer=True)
+    assert RegistroTiempo.objects.exists()
