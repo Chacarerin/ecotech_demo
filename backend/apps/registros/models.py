@@ -4,7 +4,9 @@ Es la composición del caso: un registro no existe sin su proyecto. Por eso la c
 el proyecto es PROTECT, y un proyecto con horas registradas no se puede eliminar.
 """
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 
 from apps.nucleo.models import ModeloAuditable
 from apps.nucleo.validadores import NoFutura, media_hora
@@ -30,3 +32,14 @@ class RegistroTiempo(ModeloAuditable):
 
     def __str__(self) -> str:
         return f"{self.empleado} · {self.proyecto} · {self.fecha} · {self.horas} h"
+
+    def clean(self):
+        if not (self.empleado_id and self.proyecto_id and self.fecha):
+            return              # los campos faltantes ya los informa la validación de cada campo
+        # Regla del caso: solo se registran horas dentro de una asignación vigente en esa fecha
+        asignado = self.proyecto.asignaciones.filter(
+            Q(hasta__isnull=True) | Q(hasta__gte=self.fecha),
+            empleado_id=self.empleado_id, desde__lte=self.fecha,
+        ).exists()
+        if not asignado:
+            raise ValidationError({"proyecto": "No tiene asignación vigente en este proyecto para esa fecha."})

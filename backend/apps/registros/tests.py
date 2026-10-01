@@ -58,3 +58,22 @@ class TestHorasYFecha:
         manana = timezone.localdate() + timedelta(days=1)
         with pytest.raises(ValidationError, match="No se pueden registrar horas en fechas futuras."):
             registro(base, fecha=manana)
+
+
+class TestAsignacionVigente:
+    MENSAJE = "No tiene asignación vigente en este proyecto para esa fecha."
+
+    def test_sin_asignacion_en_el_proyecto(self, base):
+        eolico = Proyecto.objects.create(nombre="Eólico", fecha_inicio=date(2026, 4, 1))
+        with pytest.raises(ValidationError, match=self.MENSAJE):
+            registro(base, proyecto=eolico)
+
+    def test_antes_de_que_empiece_la_asignacion(self, base):
+        with pytest.raises(ValidationError, match=self.MENSAJE):
+            registro(base, fecha=date(2026, 3, 31))
+
+    def test_despues_de_cerrada_no_pero_el_ultimo_dia_si(self, base):
+        Asignacion.objects.filter(empleado=base["diego"]).update(hasta=date(2026, 9, 15))
+        assert registro(base, fecha=date(2026, 9, 15)).pk           # el día de término todavía cuenta
+        with pytest.raises(ValidationError, match=self.MENSAJE):
+            registro(base, fecha=date(2026, 9, 16))
