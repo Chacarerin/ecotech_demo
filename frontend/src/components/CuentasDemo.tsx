@@ -18,19 +18,19 @@ const CUENTAS: Cuenta[] = [
     usuario: 'admin',
     rol: 'Administrador',
     icono: ShieldCheck,
-    puede: 'Todo: crea y edita departamentos, empleados y proyectos, y ve los datos personales.',
+    puede: 'Crea y edita departamentos, empleados y proyectos, ve los datos personales y revisa todas las horas.',
   },
   {
     usuario: 'gerente',
     rol: 'Gerente',
     icono: UsersRound,
-    puede: 'Marta Rojas. Ve los proyectos y asigna solo a la gente de su departamento, sin datos personales.',
+    puede: 'Marta Rojas. Ve los proyectos, asigna solo a su gente y revisa sus horas, sin datos personales.',
   },
   {
     usuario: 'empleado',
     rol: 'Empleado',
     icono: UserRound,
-    puede: 'Diego Fuentes. Ve su panel; registrará sus horas cuando llegue ese módulo.',
+    puede: 'Diego Fuentes. Registra sus horas y corrige las de la última semana.',
   },
 ]
 

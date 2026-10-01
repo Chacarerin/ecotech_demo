@@ -19,8 +19,8 @@ export const HITOS: Hito[] = [
   { numero: 3, nombre: 'Organización', detalle: 'Departamentos y empleados con datos cifrados', estado: 'listo' },
   { numero: 4, nombre: 'Proyectos', detalle: 'Proyectos y asignaciones con vigencia', estado: 'listo' },
   { numero: 8, nombre: 'En línea', detalle: 'Deploy automático tras la CI en verde', estado: 'listo' },
-  { numero: 5, nombre: 'Registro de horas', detalle: 'Horas por proyecto, con tope diario', estado: 'proximo' },
-  { numero: 6, nombre: 'Reportes', detalle: 'Informes exportables a CSV y Excel', estado: 'pendiente' },
+  { numero: 5, nombre: 'Registro de horas', detalle: 'Horas por proyecto, con tope diario', estado: 'listo' },
+  { numero: 6, nombre: 'Reportes', detalle: 'Informes exportables a CSV y Excel', estado: 'proximo' },
   { numero: 7, nombre: 'Integraciones', detalle: 'Clima del proyecto y tipo de cambio', estado: 'pendiente' },
 ]
 

@@ -15,6 +15,38 @@
 
 ---
 
+## [0.8.0] - 2026-09-30 · Hito 5 · Registro de horas
+
+El empleado registra las horas que trabaja en cada proyecto, y gerencia y administración las
+revisan. Es la composición del caso: un registro no existe sin su proyecto. 115 pruebas del backend.
+
+### Añadido
+- `[51af356]` feat(registros): modelo de registro de tiempo
+- `[4ad5a91]` feat(registros): horas en pasos de media hora y sin fechas futuras
+- `[702f08b]` feat(registros): horas solo dentro de una asignación vigente
+- `[8c402a0]` feat(registros): tope de 12 horas diarias
+- `[b1c6427]` feat(registros): API de horas con alcance por rol
+- `[f022152]` feat(frontend): registro de horas del empleado
+- `[9317d21]` feat(frontend): revisión de horas del departamento
+
+### Corregido
+- `[e798f7e]` fix(nucleo): el restablecimiento de la demo considera las horas
+
+### Decisiones y hallazgos
+- **Las horas son `Decimal`, no `float`.** 7,5 se guarda exacto y las sumas del tope diario no
+  acumulan error de redondeo.
+- **Quién trabajó lo decide la sesión, no el cuerpo de la petición.** Un empleado que envía el
+  identificador de otro registra igual a su propio nombre; hay una prueba que lo verifica.
+- **El tope diario excluye el propio registro**, para que corregirlo no lo cuente dos veces.
+- **Las reglas también protegen al código propio:** al cargar horas de demostración, la regla de media
+  hora rechazó un redondeo incorrecto (`quantize(Decimal("0.5"))` redondea a un decimal, no a
+  medias horas).
+- **Un borrado en cascada se diseña junto con las claves protegidas.** El restablecimiento nocturno
+  borraba las asignaciones y los proyectos; con horas registradas, `PROTECT` lo habría detenido la
+  primera noche. Se detectó probando la interfaz, antes de publicar.
+
+---
+
 ## [Documentación] - 2026-09-30 · UML revisado con la vara de corrección
 
 El docente pidió revisar los diagramas con la misma exigencia con que se corrigió el informe de

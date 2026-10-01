@@ -8,9 +8,9 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| **Fase actual** | Hito 5 · Registro de horas, con la aplicación en línea |
-| **Progreso general** | 64 % |
-| **Próximo hito** | Hito 5 · Registro de horas |
+| **Fase actual** | Hito 6 · Reportes y exportación |
+| **Progreso general** | 75 % |
+| **Próximo hito** | Hito 6 · Reportes y exportación |
 | **Bloqueadores** | Ninguno. Hay decisiones pendientes del docente (§7) |
 
 ---
@@ -24,8 +24,8 @@
 | 2 | **Autenticación y roles**: usuario con rol, JWT, rutas protegidas, límite de intentos | RF-01 · RF-02 | ✅ | 2026-09-28 |
 | 3 | **Organización**: departamentos y empleados, con campos cifrados | RF-03 · RF-04 · RF-05 | ✅ | 2026-09-29 |
 | 4 | **Proyectos y asignaciones** | RF-06 · RF-07 | ✅ | 2026-09-29 |
-| 5 | **Registro de horas**, con sus reglas | RF-08 | 🔜 | |
-| 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | ⏳ | |
+| 5 | **Registro de horas**, con sus reglas | RF-08 | ✅ | 2026-09-30 |
+| 6 | **Reportes y exportación** CSV y Excel | RF-09 · RF-10 | 🔜 | |
 | 7 | **Integraciones**: clima y tipo de cambio | RF-11 · RF-12 | ⏳ | |
 | 8 | **Deploy** en el VPS con CI · adelantado a los hitos 5 a 7 | — | ✅ | 2026-09-30 |
 | 9 | **Publicación** del repositorio | — | ✅ | 2026-09-28 |
@@ -49,23 +49,22 @@
 
 ---
 
-## 4. Próximos pasos · Hito 5 · Registro de horas
+## 4. Próximos pasos · Hito 6 · Reportes y exportación
 
-El registro de tiempo es la **composición** del caso: sin proyecto no hay registro, y un proyecto
-con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
+El **polimorfismo** del caso: la vista pide `exportador.exportar(reporte)` sin preguntar qué informe
+ni qué formato. Diseño en [`architecture.md`](architecture.md) §3.3 y [`uml.md`](uml.md) §2.
 
 | # | Tarea | Commit esperado |
 |---|-------|-----------------|
-| 1 | Modelo `RegistroTiempo`: empleado, proyecto, fecha, horas, descripción y autor, con `PROTECT` hacia el proyecto | `feat(registros): modelo de registro de tiempo` |
-| 2 | Reglas: horas de 0,5 a 12 en pasos de 0,5, y fecha no futura | `feat(registros): horas en pasos de media hora y sin fechas futuras` |
-| 3 | Regla: solo con asignación vigente en el proyecto en esa fecha | `feat(registros): horas solo dentro de una asignación vigente` |
-| 4 | Regla: máximo 12 horas por empleado y día, sumando todos sus registros | `feat(registros): tope de 12 horas diarias` |
-| 5 | API: el empleado crea y edita los suyos hasta 7 días atrás; el gerente ve su departamento; administración, todo | `feat(registros): API de horas con alcance por rol` |
-| 6 | Interfaz: el empleado registra sus horas en los proyectos a los que está asignado | `feat(frontend): registro de horas del empleado` |
-| 7 | Interfaz: el gerente revisa las horas de su departamento, con filtro por fechas | `feat(frontend): revisión de horas del departamento` |
+| 1 | Clase abstracta `Reporte` y los tres informes: empleados, proyectos y horas | `feat(reportes): informes de empleados, proyectos y horas` |
+| 2 | Costo de un proyecto: horas × salario mensual ÷ 180, declarado como simplificación | `feat(reportes): costo de los proyectos según las horas` |
+| 3 | Clase abstracta `Exportador`, con CSV y Excel (`openpyxl`) | `feat(reportes): exportación a CSV y Excel` |
+| 4 | API: el gerente, solo su departamento y sin costos, porque revelarían salarios; administración, todo | `feat(reportes): API de informes con alcance por rol` |
+| 5 | Interfaz: vista previa de cada informe y descarga en los dos formatos | `feat(frontend): módulo de reportes` |
 
-**Criterio aprendido en el hito 4:** cada permiso se prueba contra la tabla de
-[`project_spec.md`](project_spec.md) §4.2, no contra lo que se programó.
+**Criterio que se mantiene:** cada permiso se prueba contra la tabla de
+[`project_spec.md`](project_spec.md) §4.2, y cada diagrama que se agregue pasa la revisión de
+[`uml.md`](uml.md) §5.
 
 ## 5. Riesgos
 
@@ -106,6 +105,13 @@ con horas no se elimina. Reglas en [`project_spec.md`](project_spec.md) §4.1.
 ---
 
 ## 8. Notas de sesión
+
+### 2026-09-30 · hito 5
+- Registro de horas con sus cuatro reglas en el modelo: media hora, sin fechas futuras, dentro de una asignación vigente y tope de 12 horas diarias sumando todos los proyectos.
+- API con alcance por rol: el empleado registra, corrige y elimina las suyas de los últimos 7 días; gerencia y administración solo revisan.
+- Interfaz: registro del empleado con resumen semanal, y revisión con totales por persona y por proyecto.
+- Defecto hallado antes de producción: el restablecimiento nocturno de la demo habría fallado con horas registradas, porque estas protegen a proyectos y empleados.
+- 115 pruebas del backend.
 
 ### 2026-09-30 · hito 8, adelantado
 - La aplicación quedó en línea en `ecotech.antostudio.cl`, con la API en `ecotech-api.antostudio.cl`, certificados TLS y datos ficticios del caso.

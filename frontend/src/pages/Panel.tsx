@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import {
   ArrowUpRight,
   Building2,
-  CalendarDays,
   CircleCheck,
   CircleDashed,
+  Clock,
   Circle,
   FolderKanban,
   GitBranch,
@@ -18,11 +18,12 @@ import { Link } from 'react-router'
 import type { Rol } from '../api/recursos/auth'
 import { departamentos, empleados } from '../api/recursos/organizacion'
 import { asignaciones, proyectos } from '../api/recursos/proyectos'
+import { registros } from '../api/recursos/registros'
 import { useSesion } from '../auth/contexto'
 import CurvasDeNivel from '../components/CurvasDeNivel'
 import EstadoConexion from '../components/EstadoConexion'
 import { MODULOS } from '../components/navegacion'
-import { fecha } from '../lib/formato'
+import { fecha, haceDias, horas as horasTexto } from '../lib/formato'
 import { avance, HITOS, REPOSITORIO, type EstadoHito } from '../lib/hojaDeRuta'
 import { NOMBRE_ROL, saludo } from '../lib/persona'
 
@@ -46,6 +47,8 @@ function useIndicadores(rol: Rol): Indicador[] {
     queryFn: () => asignaciones.vigentes(),
     enabled: rol !== 'empleado',
   })
+  const semana = useQuery({ queryKey: ['panel', 'horas'], queryFn: () => registros.listar({ desde: haceDias(6) }) })
+  const horasSemana = semana.data && horasTexto(semana.data.reduce((s, r) => s + Number(r.horas), 0))
   const activos = obras.data?.filter((p) => p.activo)
 
   if (esAdmin) {
@@ -62,18 +65,20 @@ function useIndicadores(rol: Rol): Indicador[] {
       { etiqueta: 'Mi departamento', valor: mio?.nombre ?? '—', icono: Building2, detalle: mio && `${mio.cantidadEmpleados} integrantes` },
       { etiqueta: 'Proyectos activos', valor: activos?.length, icono: FolderKanban, ruta: '/proyectos' },
       { etiqueta: 'Mi equipo asignado', valor: vigentes.data?.length, icono: UserRoundCheck, ruta: '/proyectos', detalle: 'asignaciones vigentes' },
+      { etiqueta: 'Horas de mi equipo', valor: horasSemana, icono: Clock, ruta: '/horas', detalle: 'últimos 7 días' },
     ]
   }
   const yo = personas.data?.[0]
   return [
     { etiqueta: 'Mis proyectos', valor: activos?.length, icono: FolderKanban, detalle: activos?.map((p) => p.nombre).join(' · ') },
-    { etiqueta: 'Mi departamento', valor: yo?.departamentoNombre ?? '—', icono: Building2 },
-    { etiqueta: 'En EcoTech desde', valor: yo && fecha(yo.fechaInicio), icono: CalendarDays },
+    { etiqueta: 'Mis horas', valor: horasSemana, icono: Clock, ruta: '/horas', detalle: 'últimos 7 días' },
+    { etiqueta: 'Mi departamento', valor: yo?.departamentoNombre ?? '—', icono: Building2, detalle: yo && `en EcoTech desde ${fecha(yo.fechaInicio)}` },
   ]
 }
 
 function TarjetaIndicador({ etiqueta, valor, icono: Icono, ruta, detalle }: Indicador) {
-  const texto = typeof valor === 'string'
+  // Un nombre va en letra menor; una cifra, como «31 h», en grande
+  const texto = typeof valor === 'string' && !/^[\d.,]+ h$/.test(valor)
   const contenido = (
     <>
       <span className="flex items-center justify-between">

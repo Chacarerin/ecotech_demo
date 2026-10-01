@@ -153,9 +153,10 @@ mismo diagrama. Si el diagrama fuera de análisis, independiente del lenguaje, u
 
 ---
 
-## 2. Lo que viene: el registro de horas y los informes
+## 2. El registro de horas y lo que viene: los informes
 
-Planificado para los hitos 5 y 6. Se dibuja aparte porque todavía no existe en el código.
+El registro de horas existe desde el hito 5, en `backend/apps/registros/`. Los informes están
+planificados para el hito 6 y se dibujan aparte porque todavía no existen en el código.
 
 ```mermaid
 classDiagram
@@ -175,7 +176,8 @@ classDiagram
 ```
 
 *Figura 4 · El registro de horas. El rombo relleno indica composición: el registro no existe sin su
-proyecto.*
+proyecto. Sus reglas —media hora, sin fechas futuras, dentro de una asignación vigente y hasta 12
+horas diarias— están en `clean()`.*
 
 ```mermaid
 classDiagram
@@ -205,8 +207,8 @@ classDiagram
     Exportador ..> Reporte : «use»
 ```
 
-*Figura 5 · Los informes y sus formatos de exportación. Las operaciones marcadas con asterisco son
-abstractas: cada subclase las implementa.*
+*Figura 5 · Los informes y sus formatos de exportación, planificados para el hito 6. Las operaciones
+marcadas con asterisco son abstractas: cada subclase las implementa.*
 
 | Relación | Por qué |
 |----------|---------|
@@ -241,8 +243,8 @@ de uso.
 | Registrar un empleado · Actualizar la ficha de un empleado | Administrador | ✅ Hito 3 |
 | Crear un proyecto · Desactivar un proyecto | Administrador | ✅ Hito 4 |
 | Consultar los proyectos · Asignar personal · Cerrar una asignación | Administrador y gerente; el gerente, solo con su gente | ✅ Hito 4 |
-| Revisar las horas registradas | Administrador y gerente | ⏳ Hito 5 |
-| Registrar horas trabajadas | Empleado | ⏳ Hito 5 |
+| Revisar las horas registradas | Administrador y gerente; el gerente, solo las de su gente | ✅ Hito 5 |
+| Registrar horas trabajadas | Empleado, solo las suyas y de los últimos 7 días | ✅ Hito 5 |
 | Exportar un informe | Administrador y gerente | ⏳ Hito 6 |
 
 ---
