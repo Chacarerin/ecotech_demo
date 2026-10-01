@@ -18,6 +18,6 @@ export const MODULOS: Modulo[] = [
   { ruta: '/empleados', nombre: 'Empleados', nombreCorto: 'Personal', descripcion: 'Fichas, datos personales cifrados y departamento', icono: Users, roles: ['administrador'] },
   { ruta: '/departamentos', nombre: 'Departamentos', nombreCorto: 'Deptos.', descripcion: 'Áreas de la empresa y su gerente', icono: Building2, roles: ['administrador'] },
   { ruta: '/proyectos', nombre: 'Proyectos', descripcion: 'Ubicación, moneda y quién trabaja en cada uno', icono: FolderKanban, roles: ['administrador', 'gerente'] },
-  { ruta: '/horas', nombre: 'Horas', descripcion: 'Registro diario de horas por proyecto', icono: Clock, roles: ['administrador', 'gerente', 'empleado'], hito: 5 },
+  { ruta: '/horas', nombre: 'Horas', descripcion: 'Registro diario de horas por proyecto', icono: Clock, roles: ['administrador', 'gerente', 'empleado'] },
   { ruta: '/reportes', nombre: 'Reportes', descripcion: 'Informes exportables a CSV y Excel', icono: BarChart3, roles: ['administrador', 'gerente'], hito: 6 },
 ]

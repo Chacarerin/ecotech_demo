@@ -2,7 +2,7 @@ import { LoaderCircle } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 export const estiloCampo =
-  'w-full rounded-xl border border-borde bg-tarjeta px-3.5 py-3 outline-none transition hover:border-texto-tenue/50 focus:border-acento focus:ring-4 focus:ring-acento/15 disabled:opacity-60'
+  'w-full rounded-xl border border-borde bg-tarjeta px-3.5 py-3 outline-none transition placeholder:text-texto-tenue/60 hover:border-texto-tenue/50 focus:border-acento focus:ring-4 focus:ring-acento/15 disabled:opacity-60'
 
 /** Campo con su etiqueta siempre visible y su error debajo · CLAUDE.md §10 (formularios móviles). */
 export function Campo({ etiqueta, error, children }: { etiqueta: string; error?: string; children: ReactNode }) {

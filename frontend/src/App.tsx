@@ -10,6 +10,7 @@ import FormularioDepartamento from './features/departamentos/FormularioDepartame
 import FormularioEmpleado from './features/empleados/FormularioEmpleado'
 import ListaEmpleados from './features/empleados/ListaEmpleados'
 import FichaProyecto from './features/proyectos/FichaProyecto'
+import Horas from './features/horas/Horas'
 import ListaProyectos from './features/proyectos/ListaProyectos'
 import ListaDepartamentos from './features/departamentos/ListaDepartamentos'
 
@@ -37,6 +38,7 @@ const rutas = createBrowserRouter([
         { path: 'proyectos', element: <ListaProyectos /> },
         { path: 'proyectos/:id', element: <FichaProyecto /> },
       ].map((r) => ({ ...r, element: <RutaProtegida roles={['administrador', 'gerente']}>{r.element}</RutaProtegida> })),
+      { path: 'horas', element: <RutaProtegida roles={['administrador', 'gerente', 'empleado']}><Horas /></RutaProtegida> },
       { path: 'proyectos/nuevo', element: <RutaProtegida roles={['administrador']}><FichaProyecto /></RutaProtegida> },
       // Módulos aún en construcción
       ...MODULOS.filter((m) => m.hito).map((m) => ({
